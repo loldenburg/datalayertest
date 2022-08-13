@@ -14,10 +14,48 @@ In the Tealium iQ (MochaChai) variant, errors are reported visually as you brows
 Tealium Functions console and to your destination of choice, e.g. a Google Cloud Function + Firestore for deeper
 debugging and an influxDB for monitoring.
 
+## Getting started
+
+This "getting started" guide of course will not reap any sensible output for you yet. You first need to define the
+actual Event-Name-based tests. For this, see the chapters after this one.
+
+### Tealium iQ
+
+You need
+
+1. A Tag which loads the mocha / chai JS libraries
+2. An Extension to run the actual data layer tests
+
+#### Tag
+
+The Tag simply loads the Mocha and Chai JS libraries asynchronously and makes sure they are not loaded multiple times on
+the same page. After successful loading, it triggers the Data Layer Tests in the Extension (see next chapter).
+
+1. Create a new tag of type "Tealium Custom Container" and call it e.g. "MochaChai Data Layer Tests"
+2. Make sure it does not fire on PROD environments and add any load rules that you want it to fire (e.g. "Any Event
+   apart from some Events we do not want to run tests for (yet)")
+3. Save your Tealium Profile (otherwise you cannot edit the tag template).
+4. Go into the tag -> Advanced -> Tag Template.
+5. Paste the code from `tealium-iq/tags/mochachai.js`
+6. Save the tag
+
+#### Extension
+
+1. Create an "After Tags" Extension and make sure it is ideally the last one in your execution order.
+2. Add the code from `tealium-iq/extensions/mochachai-iq-extension.js`
+3. Approve the Extension to all environments you want it to run (do not run it on PROD!)
+4. Publish your Tealium Profile.
+
+### Tealium Functions
+
+1. Create a Tealium Function of the type "After Processing".
+2. Paste and review the code from `tealium-functions/unit_test.js`
+3. Save and Publish your Customer Data Hub Profile
+
 ## Event Names
 
-All tests are triggered by __Event Names__. The Event Name is transmitted via the Data Layer variable `event_name`. 
-An Event Name is whatever you define it to be. An example could be a concatenation (separator: \_\_ (double underscore) of:
+All tests are triggered by __Event Names__. The Event Name is transmitted via the Data Layer variable `event_name`. An
+Event Name is whatever you define it to be. An example could be a concatenation (separator: \_\_ (double underscore) of:
 
 * the Tealium Event ("view"/"link") plus
     * `component_category` + "_" + `component_subcategory`
