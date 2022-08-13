@@ -91,7 +91,7 @@ function updateHelpers(cb) {
         let mocha = fs.readFileSync(mochaPath, "utf8");
         let tealFunction = fs.readFileSync(tealFuncPath, "utf8");
         const replaceRe = /\/\/ Shared TMSHelper functions start[\s\S]+\/\/ Shared TMSHelper functions end/gmi;
-        const replaceBy = "// Shared TMSHelper functions start\n    " + helpers + "\n    // Shared TMSHelper functions end";
+        const replaceBy = "// Shared TMSHelper functions start\n" + helpers + "\n// Shared TMSHelper functions end";
         tealFunction = tealFunction.replace(replaceRe, replaceBy);
         mocha = mocha.replace(replaceRe, replaceBy);
         fs.writeFileSync(tealFuncPath, tealFunction);

@@ -206,22 +206,6 @@ and `some_other_variable_that_never_exists_on_profile2`.
 At the end of the Test Script, the `error` object and some context messages are printed to the Tealium logs if it
 contains errors. Filter the logs for "Exceptions" to see all failed tests.
 
-# TODO Remove from official documentation, but make part of internal docs
-
-### InfluxDB monitoring
-
-Moreover, the errors are sent to an InfluxDB for aggregate real-time monitoring and alerting.
-
-### Google Cloud Logging
-
-In case of an error. the full data layer and the `error` object are also sent to a Google Cloud Function for filtrable
-detailed logging in Google Cloud Logs (filter for `log_datalayer_error`. All errors are also stored in Firestore for
-easy viewing of the data layer for a particular error. The script run id (which is also prepended to every Cloud log) is
-also the Firestore Document ID. See this video "From InfluxDB to GCP Logs" on how to debug
-there: https://www.loom.com/share/d8ba9f6f039c428da994f0f6ab5da16b
-
-# TODO END REMOVE FROM official doc
-
 ## Gulp Workflows
 
 ### Full Build

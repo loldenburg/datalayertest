@@ -1,12 +1,6 @@
-// TODO TEST IF THIS STRIPPED DOWN AND ENTZWEIGTE VERSION ACTUALLY WORKS!
 // start mocha Extension code. Add this as the last "After Tags" Extension in Tealium iQ (and do not publish to PROD!)
 "use strict";
 window.TMSHelper = window.TMSHelper || {};
-if (b["tool_mochaTestFlag"] === "0") {
-    // abort Tag if non-supported Event or no mocha Chai cookie (this is actually already handled through the Mocha Tag's Load Rule)
-    // noinspection JSAnnotator
-    return false;
-}
 /**
  * simple flag to know that we are in "Mocha" (and not e.g. Tealium Functions) context (some helper functions work differently in Tealium Functions context)
  * @type {boolean}
@@ -152,7 +146,7 @@ TMSHelper.importLib = function (libNames, eventMap, eventSchemas) {
     }
     // remove the "import" properties from the final event schemas as they are irrelevant for the tests
     _eventSchemaArray = _eventSchemaArray.filter(function (el) {
-        return !el["import"]
+        return !el["import"];
     });
     return _eventSchemaArray;
 };
@@ -277,12 +271,6 @@ TMSHelper.runDataLayerTests = function (dl) {
             if (eventMap[en]) {
                 TMSHelper.console("Event " + en + " is in Events with a test definition. Importing Test Definition.")
                 eventSchemaArray = TMSHelper.importLib([en], eventMap, eventSchemaArray);
-                // special case: search result list clicks: import the search result click library also
-                // TODO REMOVE THIS FOR PUBLIC VERSION
-                if (en === "link__list__list_click" && dl.oss_term && dl.oss_term !== "*") {
-                    eventSchemaArray = TMSHelper.importLib(["srch_result_click"], eventMap, eventSchemaArray);
-                    en = "srch_result_click";
-                }
             } else {
                 describe('No specific Tests defined: ', function () {
                     it("No specific Test defined for Event " + en, function (done) {
