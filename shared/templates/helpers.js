@@ -134,7 +134,7 @@ TMSHelper.regExpPrice = "/^([1-9]\\d*|0)(\\.\\d{1,2}|)$/";
  * Mocha/Chai: a RegExp to check if a value is a positive integer
  * @type {string}
  *
- * @module tests/regExpPrice
+ * @module tests/positiveInt
  */
 TMSHelper.positiveInt = "/^[1-9]\\d*$/";
 
@@ -142,7 +142,7 @@ TMSHelper.positiveInt = "/^[1-9]\\d*$/";
  * Mocha/Chai: a RegExp to check if a value is a positive integer
  * @type {string}
  *
- * @module tests/positiveInt
+ * @module tests/positiveIntOrZero
  */
 TMSHelper.positiveIntOrZero = "/^(zero|[1-9]\\d*)$/";
 /**

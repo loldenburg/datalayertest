@@ -1,8 +1,7 @@
-const {src, dest, series, watch} = require('gulp');
+const {src, dest, series} = require('gulp');
 const uglify = require("gulp-uglify");
 const rename = require("gulp-rename");
 const fs = require("fs");
-const axios = require("axios");
 const jsonminify = require("gulp-jsonminify");
 
 /**
