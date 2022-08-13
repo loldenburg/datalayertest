@@ -1,0 +1,15 @@
+{
+    "import": ["tpl_cartAddEvents"],
+    "eventSchema": {
+        "populatedAndOfType": {
+            "prod_list": "!!",
+            "prod_purchasableHasService": "array"
+        },
+        "fullOrRegExMatch": {
+            "prod_action": "add_pdp",
+            "component_category": "ecommerce",
+            "component_subcategory": "add_pdp",
+            "page_type": "Product"
+        }
+    }
+}

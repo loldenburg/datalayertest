@@ -1,0 +1,30 @@
+{
+  "fullOrRegExMatch": {
+    "timing_server": "/^\\d+$/",
+    "timing_load": "/^\\d+$/",
+    "timing_dom": "/^\\d+$/",
+    "timing_deltaToUtagInit": "/^(-1|\\d+)$/",
+    "sugg_version_env": "/^.*\\d.*::[a-z]$/",
+    "sugg_version": "/^.*\\d$/",
+    "sugg_env": "/^[a-z]$/",
+    "server_code": "/^\\d{3}$/",
+    "referrer_full": "/^(https?|android-app):.*/",
+    "order_currency": "CHF",
+    "page_language": "/^(de|en|fr|it)$/",
+    "page_instanceid": "/^([a-z\\d]{40}|[a-z-\\d]{36})_20\\d+$/",
+    "debug_info": "/^ut[\\d\\.]+\\|[a-z]{2,4}\\|[a-z_-]+\\|y\\|\\d{3}\\|.*/",
+    "dbg_localStorage": "y",
+    "onsiteCampaign_name": "/^\\!\\w[\\w\\d]{0,2}-[a-z0-9_!\\-+\\/%=?&]+$/",
+    "cp.ut_aa_mcid": "/\\d+/",
+    "url_rootDomain": {
+      "switch": {
+        "ut.profile": {
+          "main": "main-site.ch",
+          "second-profile": "/(othersite|nextsite|anothersite)\\.ch/",
+          "third-profile": "/(thirdsite|fourthsite)\\.ch/",
+          "default": "unexpected domain"
+        }
+      }
+    }
+  }
+}

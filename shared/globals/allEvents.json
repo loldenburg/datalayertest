@@ -1,0 +1,7 @@
+{
+  "import": [
+    "allEventsRegexSchema",
+    "allEventsTypeSchema",
+    "allEventsFunctionSchema"
+  ]
+}

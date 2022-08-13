@@ -1,0 +1,18 @@
+{
+    "eventSchema": {
+        "populatedAndOfType": {
+            "prod_quan": "array",
+            "order_id": "!!",
+            "persistPageContext": "string",
+            "prod_actionIsCartAdd": "string",
+            "cart_content": "**object",
+            "component_category": "array",
+            "component_subcategory": "array"
+        },
+        "fullOrRegExMatch": {
+            "order_id": "!!",
+            "persistPageContext": "y",
+            "prod_actionIsCartAdd": "y"
+        }
+    }
+}

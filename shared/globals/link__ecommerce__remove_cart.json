@@ -1,0 +1,13 @@
+{
+    "eventSchema": {
+        "populatedAndOfType": {
+            "prod_quan": "array",
+            "prod_pos": "array",
+            "order_id": "!!"
+        },
+        "fullOrRegExMatch": {
+            "prod_action": "/^remove_cart$/",
+            "page_type": "Cart"
+        }
+    }
+}

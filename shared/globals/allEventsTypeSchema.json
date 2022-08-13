@@ -1,0 +1,19 @@
+{
+    "populatedAndOfType": {
+        "toolGA_tid": "string",
+        "toolAA_rsId": "string",
+        "server_code": "string",
+        "platform": "string",
+        "page_type": "string",
+        "page_title": "string",
+        "page_language": "string",
+        "page_instanceid": "string",
+        "order_currency": "string",
+        "environment_platform": "string",
+        "debug_info": "string",
+        "dbg_localStorage": "string",
+        "client_id": "string",
+        "M~cp.ut_aa_mcid": "string",
+        "cart_content": "**object"
+    }
+}

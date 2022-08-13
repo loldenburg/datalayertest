@@ -1,0 +1,16 @@
+{
+  "populatedAndOfType": {
+    "prod_action": "array",
+    "prod_cat_l1": "array",
+    "prod_cat_l2": "array",
+    "prod_cat_l3": "**array",
+    "prod_cat_l4": "**array",
+    "prod_cat_l5": "**array",
+    "prod_cat_wg": "array",
+    "prod_id": "array",
+    "prod_price": "array",
+    "prod_stock": "array",
+    "prod_purchasable": "array",
+    "prod_hasService": "**array"
+  }
+}

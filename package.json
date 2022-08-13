@@ -1,0 +1,22 @@
+{
+  "name": "datalayertests",
+  "version": "1.0.0",
+  "description": "Data Layer Tests for Tealium via a MochaChai JS-based iQ Extension + Tag and a server-side Tealium Function",
+  "main": "tealium-iq/extensions/mochachai-iq-extension.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Lukas Oldenburg / Nicola Rohner",
+  "license": "ISC",
+  "devDependencies": {
+    "jsdoc": "^3.6.10",
+    "axios": "^0.27.2",
+    "gulp": "^4.0.2",
+    "gulp-debug": "^4.0.0",
+    "gulp-rename": "^2.0.0",
+    "gulp-replace": "^0.5.3",
+    "gulp-uglify": "^3.0.2",
+    "gulp-jsonminify": "^1.1.0",
+    "yargs": "^17.5.1"
+  }
+}

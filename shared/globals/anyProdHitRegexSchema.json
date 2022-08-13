@@ -1,0 +1,20 @@
+{
+  "fullOrRegExMatch": {
+    "prod_id": "/^[1-9]\\d+$/",
+    "firstProd_id": "/^[1-9]\\d+$/",
+    "prod_pos": "/^[1-9]\\d*$/",
+    "prod_posTotal": "/^[1-9]\\d*$/",
+    "prod_quan": "//positiveInt",
+    "prod_price": "//regExpPrice",
+    "prod_priceTotal": "//regExpPrice",
+    "prod_stock": "/^(n|[1-9]\\d*)$/",
+    "prod_purchasable": "/^[yn]$/",
+    "prod_hasService": "/[yn]$/",
+    "prod_cat_l5": "/^$|[aA-zZ].*/",
+    "prod_cat_l4": "/^$|[aA-zZ].*/",
+    "prod_cat_l3": "/[aA-zZ].*/",
+    "prod_cat_l2": "/[aA-zZ].*/",
+    "prod_cat_l1": "/[aA-zZ].*/",
+    "prod_action": "/^[a-z0-9_]+$/"
+  }
+}
