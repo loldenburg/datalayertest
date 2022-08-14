@@ -1,12 +1,12 @@
 # Tealium Client-and-Server-Side Data Layer Testing Framework
 
-## Introduction
+## Summary
 
 This framework validates Tealium Data Layer Events via ...
 
-* __Tealium iQ (`tealium-iq` folder):__ client-side for ad-hoc testing in your browser via a Mocha/Chai-JS based tag + "
-  After Tags" Extension (folders `extensions` and `tags`)
-* __Tealium Functions (`tealium-functions` folder):__ server-side for all Events of all users
+1. __Tealium iQ (`tealium-iq` folder):__ client-side for ad-hoc testing in your browser via a Mocha/Chai-JS based tag +
+   Extension (folders `tealium-iq/tags` and `tealium-iq/extensions`)
+2. __Tealium Functions (`tealium-functions` folder):__ server-side to test all Events of all users
 
 Both frameworks use the same JSON-schema-based data layer test definitions (see `shared/globals`).
 
@@ -14,47 +14,52 @@ In the Tealium iQ (MochaChai) variant, errors are reported visually as you brows
 Tealium Functions console and to your destination of choice, e.g. a Google Cloud Function + Firestore for deeper
 debugging and an influxDB for monitoring.
 
+The Tealium Functions part of this framework is a much-enhanced and partially rewritten fork of Lukasz Cieloch's draft
+which you can view here: TODO Add link
+
 ## Getting started
 
-This "getting started" guide of course will not reap any sensible output for you yet. You first need to define the
-actual Event-Name-based tests. For this, see the chapters after this one.
+This "getting started" guide only shows how to set up the components in Tealium. To actually benefit from these
+componentes, you of course need to define the actual Data Layer tests. For this, see the chapters after this one.
 
 ### Tealium iQ
 
 You need
 
 1. A Tag which loads the mocha / chai JS libraries
-2. An Extension to run the actual data layer tests
+2. An "After Tags" Extension to run the actual data layer tests
 
 #### Tag
 
-The Tag simply loads the Mocha and Chai JS libraries asynchronously and makes sure they are not loaded multiple times on
+The Tag simply loads the Mocha and Chai JS libraries asynchronously, makes sure they are not loaded multiple times on
 the same page. After successful loading, it triggers the Data Layer Tests in the Extension (see next chapter).
 
-1. Create a new tag of type "Tealium Custom Container" and call it e.g. "MochaChai Data Layer Tests"
+1. Create a new tag of type "Tealium Custom Container" and call it e.g. "MochaChai Data Layer Tests".
 2. Make sure it does not fire on PROD environments and add any load rules that you want it to fire (e.g. "Any Event
-   apart from some Events we do not want to run tests for (yet)")
+   apart from some Events we do not want to run tests for (yet)").
 3. Save your Tealium Profile (otherwise you cannot edit the tag template).
 4. Go into the tag -> Advanced -> Tag Template.
 5. Paste the code from `tealium-iq/tags/mochachai.js`
-6. Save the tag
+6. Save the tag.
+7. Move the tag to the end of the execution order so it is ideally the last one to fire.
 
 #### Extension
 
-1. Create an "After Tags" Extension and make sure it is ideally the last one in your execution order.
-2. Add the code from `tealium-iq/extensions/mochachai-iq-extension.js`
-3. Approve the Extension to all environments you want it to run (do not run it on PROD!)
-4. Publish your Tealium Profile.
+1. Create an "After Tags" Extension of type "Advanced JavaScript".
+2. Add the code from `tealium-iq/extensions/mochachai-iq-extension.js`.
+3. Approve the Extension to all environments where you want it to run (you should not run it on PROD).
+4. The Extension should ideally be the last one in your execution order.
+5. Publish your Tealium Profile.
 
 ### Tealium Functions
 
-1. Create a Tealium Function of the type "After Processing".
-2. Paste and review the code from `tealium-functions/unit_test.js`
-3. Save and Publish your Customer Data Hub Profile
+1. Create a Tealium Function of the type "(After) Processed Event".
+2. Paste and review the code from `tealium-functions/unit_test.js`.
+3. Save and Publish your Customer Data Hub Profile.
 
 ## Event Names
 
-All tests are triggered by __Event Names__. The Event Name is transmitted via the Data Layer variable `event_name`. An
+All tests are triggered by __Event Names__. The Event Name is identified via the Data Layer variable `event_name`. An
 Event Name is whatever you define it to be. An example could be a concatenation (separator: \_\_ (double underscore) of:
 
 * the Tealium Event ("view"/"link") plus
@@ -67,26 +72,34 @@ __Examples:__
 * `link__srchFilter__select`
 * `view__ecommerce__purchase`
 
-The script will look if there is a test for the given Event Name. If there is a test, it will load the Test Schema and
-import the libraries or other Schema Lists for the test.
+The script will look if there is a test defined for the given Event Name in the testing map (`TMSHelper.event2DLVarMap`)
+. If so, it imports the test schema and execute the test.
 
-Failed Tests are logged to an `error` Object. The error object will be logged as an exception in Tealium Functions, and
-it can be sent to your destination of choice (e.g. an InfluxDB and/or a Google Cloud Function URL) for more monitoring
-and debugging.
+#### The `allEvents` and `anyProdHit` Tests
+
+Even if an event name has no specific test defined yet, the `allEvents` test will always run. Similarly, if an Event has
+a `prod_id` property, it is assumed that this is a product-specific Event, so the `anyProdHit` test will also run. In
+these "all-encompassing" tests, you should specify all the variables that should always be there and what they are
+expected to look like.
+
+This allows you to reduce the event-specific test definitions to only those variables that are different for that
+particular event. So the more you handle in the allEvents and anyProdHit tests, the more you can scale your tests and
+avoid redundancies.
 
 ### What is a good Event Name?
 
-Make sure to define your event names not too low-granular so you don't need to write too many tests for very similar
+Make sure to define your event names not too granularly so you don't need to write too many tests for very similar
 events (see "Importing (referencing) other test definitions" below on how to set up your test definitions with as little
-redundancy as possible)). E.g. an Event name containing the URL Path is too low-granular, because it would assume that
-every page has its own data layer tests.
+redundancy as possible)). E.g. an event name containing the URL Path is too low-granular, because it would assume that
+every page has its own data layer test.
 
 ## Test Schemas ("globals")
 
-The Test Schemas (in the `shared/globals` folder) are JSON files named after the Event Name,
-e.g. `view__ecommerce__purchase.json`.
+The actual test schemas (in the `shared/globals` folder) are JSON files named after the event name + `.json`,
+e.g. `view__ecommerce__purchase.json`. Some examples have been provided in that folder for you to get started. The
+actual test definitions in your case of course depend on your specific data layer.
 
-For example, this is how the Test schema could look like for PDP Views:
+For example, this is how the test schema could look like for PDP Views:
 
 ```json
 {
@@ -96,7 +109,7 @@ For example, this is how the Test schema could look like for PDP Views:
   "eventSchema": {
     "populatedAndOfType": {
       "url_permaLink_de": "string",
-      "!order_id"
+      "order_id": "!!"
     },
     "fullOrRegExMatch": {
       "prod_action": "detail",
@@ -114,6 +127,12 @@ See the following paragraphs to illustrate this example:
 
 ### Importing (referencing) other test definitions
 
+The `eventSchema` property is used to define the test schema for the given event. It _overrides any other imported
+definitions_.
+
+The `eventSchema` property is mandatory if the schema requires imports. If there are no imports, you can directly write
+the test definitions (without `eventSchema` around them).
+
 The `import` property is used to import entire predefined test schemas. Here, we import the `ecommerceGeneralTemplate`
 schema which could contain all variables common for all e-commerce events. This means we do not have to define commonly
 shared tests in each event schema again.
@@ -121,15 +140,27 @@ shared tests in each event schema again.
 You can import **multiple** test schemas. If the same data layer variable is defined in multiple imported schemas, the
 definition from the last imported schema wins.
 
-The `eventSchema` property is used to define the test schema for the given event. It _overrides any other imported
-definitions_.
+### Example for importing schemas
 
-The `eventSchema` property is mandatory if the schema requires imports. If there are no imports, you can directly write
-the test definitions (without `eventSchema` around them).
+1. Event `ecommerce_add_pdp.json`
+
+- defines a `fullOrRegExpMatch` (see below) test: `"var_a": "1"` (var_a has to equal "1")
+- imports `["tpl_cartAddEvents"]`
+
+2. `tpl_cartAddEvents.json`
+
+- defines a `fullOrRegExpMatch` (see below) test: `"var_a": "2"` (var_a has to equal "2")
+- defines another test: `"var_b": "/som.RegExp/"`
+
+=> The final testSchema will be
+
+- `"var_a": "1"` because the highest eventSchema (the first one to be loaded, in this example is `ecommerce_add_pdp`) "
+  wins" in case of conflicting test definitions)
+- `"var_b": "/som.RegExp/"` -> was not overridden by another definition in `ecommerce_add_pdp`
 
 ### Test Types
 
-The schema is a JSON object and can have the following properties (test definitions):
+The test schema is a JSON file and can have the following properties (test definitions):
 
 - `populatedAndOfType`
 - `fullOrRegExMatch`
@@ -139,15 +170,16 @@ They are explained as follows:
 
 #### populatedAndOfType
 
-Checks if the given data layer variable is populated and of the given type. Supported types are JS return values
-of `typeof` (e.g. "object", "string") plus "array". The Helper Function (in `templates/helpers`) `TMSHelper.typeOf` is
-for this. It mimicks Tealium's own `ut.typeOf` function.
+Checks if the data layer variable is populated and of the given type. Supported types are JS return values of `typeof` (
+e.g. "object", "string") plus "array". The Helper Function (in `templates/helpers`) `TMSHelper.typeOf` is for this. It
+mimicks Tealium's own `ut.typeOf` function.
 
 **Special Commands:**
 
 * `**` = "optional". Example: `"url_permaLink_de": "**string"` (url_permaLink is not mandatory, but if it is part of the
   data layer, it has to be a string)
-* `!!` = "must _not_ be populated". Test passes if the given data layer variable is not populated (
+* `!!` = "must _not_ be populated". Example: `"order_id": "!!"`. Test passes if the given data layer variable is not
+  populated (
   not `undefined, null, "", false, []`).
 
 Example:
@@ -168,24 +200,27 @@ Example:
 Checks ...
 
 * if a data layer variable's value matches the given Regular Expression (string starting and ending with "/",
-  e.g. `"variable": "/^myRegexpAsAStringIEWith\\Backslashes-doublescaped$/"`)
-* or is equal to the given value (`"variable": "value"`)
+  e.g. `"variable": "/^Regexp-as-string\\! So-Backslashes-need-to-be-doublescaped$/"`)
+* or is equal to the given value (`"variable": "exactlyThisValuePlease"`)
 
-It is also possible to add links to predefined Regular Expressions with `//name`. The Regex are stored in the TMSHelper
-Object. For example, `"//positiveInt"` will check `TMSHelper.positiveInt`. If the definition of TMSHelper.positiveInt (a
-positive integer number) ever changes, you don't need to update all test schemas using it.
+It is also possible to add links to predefined Regular Expressions with `//name`. The Regexes are stored in the
+TMSHelper Object and you can add to them by changing the `shared/templates/helpers.js` file. For
+example, `"//positiveInt"` will check `TMSHelper.positiveInt`. If the definition of TMSHelper.positiveInt (a positive
+integer number) ever changes, you don't need to update all test schemas using it.
 
 In more complex cases, you can use switches to check if a given data layer variable's value matches the given RegEx
-depending on the given switch Key. Example below: Check url_rootDomain and switch on ut.profile.
+depending on the given switch Key. Example below: Check url_rootDomain and switch on `ut.profile`. The `default` allows
+you to specify a fallback (in case `ut.profile` does not match any of the other values provided).
 
 Example:
 
 ```json
 {
   "fullOrRegExMatch": {
-    "prod_action": "/^detail$/",
+    "prod_action": "detail",
+    "prod_stock": "/^(n|[1-9]\\d*)$/",
     "page_type": "Product",
-    "product_id": "//postiveInt",
+    "prod_id": "//positiveInt",
     "url_rootDomain": {
       "switch": {
         "ut.profile": {
@@ -203,25 +238,28 @@ Example:
 #### functionMatch
 
 For more complex logic, the functionMatch logic allows to run a custom JS function that must be part of the
-TMSHelper.functionMatchFunctions object (see `template/helpers`). Functions must return `true` or `false` if the test
+`TMSHelper.functionMatchFunctions` object (see `template/helpers`). Functions must return `true` or `false` if the test
 is (not) passed.
 
 ```json
 {
-  "TheEventName": {
-    "functionMatch": {
-      "page_type": "validatePageTypeOnSearch"
-    }
+  "functionMatch": {
+    "page_type": "validatePageTypeOnSearch"
   }
 }
 ```
 
 This will run `TMSHelper.functionMatchFunctions.validatePageTypeOnSearch(eventData, "value of page_type")`
 
+### Array Variables
+
+If your variable to test is an array (e.g. for product list tracking), don't worry. The tests will automatically
+validate **every Array element**.
+
 ### Ignore Variables by Tealium Profile
 
-In some cases you want to ignore certain data layer variables on a specific platform (=Tealium Profile). For this, you
-add this variable to the ignore list:
+In many cases, you want to ignore certain data layer variables on a specific platform (=Tealium Profile). For this, you
+add this variable to the `TMSHelper.ignoreKeysForPlatform` ignore list (in `shared/templates/helpers.js`):
 
 ```javascript
 TMSHelper.ignoreKeysForPlatform = {
@@ -243,14 +281,18 @@ and `some_other_variable_that_never_exists_on_profile2`.
 
 At the end of the Test Script, the `error` object and some context messages are printed to the Tealium logs if it
 contains errors. Filter the logs for "Exceptions" to see all failed tests.
+![img.png](img.png)
 
 ## Gulp Workflows
+
+Gulp Workflows are used to automatically put all the pieces together without tedious copy-paste effort.
+Run `npm install` to install the necessary libraries and dependencies from package.json.
 
 ### Full Build
 
 Run `gulp build` to
 
-* generate concatenated Event Map JS and JSON files as well as minified versions of them
+* generate concatenated Event Map JS Object and JSON files as well as minified versions of them
 * insert the updated Event Map into the Tealium Function (`functions/unit_test.js`)
 * update the helper functions in both the Mocha Extension and the Tealium Function
 
@@ -258,16 +300,9 @@ The following explains each of the `build` actions:
 
 ### Generate concatenated Event Map File
 
-Concatenates all test schemas into one file (e.g. to use in MochaChai Tests in Tealium iQ Extension)
-Change test definitions ONLY in the `shared/globals` folder.
+Concatenates all JSON test schemas into one file (`shared/templates/eventMap.js` and `...json`).
 
-After changing any test definition, run `gulp generateEventMap`.
-
-This generates:
-
-- a file with all test definitions as one large JS object in `/globals/eventMap.js` and a minified version of it
-  in `/globals/eventMap.min.js`
-- the same as .json (`globals/eventMap.json` and `...min.json`)
+After changing any test definition, you can run this task individually via `gulp generateEventMap`.
 
 ### Insert updated Event Map into Tealium Function (unit_test.js)
 
@@ -277,9 +312,17 @@ This updates the Tealium Function (unit_test.js) with `eventMap.min.js`.
 ### Update shared Helper Functions
 
 The client-side Mocha tests share most Helper functions with the server-side Tealium functions. To avoid duplicate
-maintenance effort, the shared functions are located in `globals\helpers.js`.
+maintenance effort, the shared functions are located in `shared/templates/helpers.js`. Only edit them there.
 
-After updates to the helper functions, re-insert them (in minified form) into the MochaChai Extension and the Tealium
-Function (unit_test.js) via
+After updates to the helper functions, this task re-inserts them (in minified form) into the MochaChai Extension and the
+Tealium Function (unit_test.js). You can trigger it via
 
 `gulp updateHelpers`
+
+### Don't forget to update Tealium itself
+
+After running any of the tasks above, make sure to update the actual Tealium Function Code in the Tealium Customer Data
+Hub and the Tealium iQ MochaChai Extension with the updated code. 
+
+## Support / Questions
+Raise your questions in this repo or via email to lukas.oldenburg at dim28.ch.
