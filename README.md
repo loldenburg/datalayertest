@@ -10,9 +10,22 @@ This framework validates Tealium Data Layer Events via ...
 
 Both frameworks use the same JSON-schema-based data layer test definitions (see `shared/globals`).
 
-In the Tealium iQ (MochaChai) variant, errors are reported visually as you browse. Server-Side errors are logged in the
-Tealium Functions console and to your destination of choice, e.g. a Google Cloud Function + Firestore for deeper
-debugging and an influxDB for monitoring.
+In the Tealium iQ (MochaChai) variant, errors are reported visually as you browse.
+![img_2.png](img_2.png)
+MochaChai JS client-side data layer tests
+
+In the server-side variant, errors are logged in the Tealium Functions console and/or to your destination of choice (you
+need to set this part up yourself), e.g. a Google Cloud Function + Firestore for deeper debugging and an influxDB for
+monitoring.
+
+![img_1.png](img_1.png)
+Tealium Function Logs
+
+![img_3.png](img_3.png)
+InfluxDB
+
+![img_4.png](img_4.png)
+Google Cloud Firestore
 
 The Tealium Functions part of this framework is a much-enhanced and partially rewritten fork of Lukasz Cieloch's draft
 which you can view here: TODO Add link
@@ -56,6 +69,11 @@ the same page. After successful loading, it triggers the Data Layer Tests in the
 1. Create a Tealium Function of the type "(After) Processed Event".
 2. Paste and review the code from `tealium-functions/unit_test.js`.
 3. Save and Publish your Customer Data Hub Profile.
+
+### Gulp Build Functionality
+
+To benefit from the automatic building of the JS test map and shared helper functions via `gulp`, run `npm install` and
+check the last chapter in this guide.
 
 ## Event Names
 
@@ -322,7 +340,8 @@ Tealium Function (unit_test.js). You can trigger it via
 ### Don't forget to update Tealium itself
 
 After running any of the tasks above, make sure to update the actual Tealium Function Code in the Tealium Customer Data
-Hub and the Tealium iQ MochaChai Extension with the updated code. 
+Hub and the Tealium iQ MochaChai Extension with the updated code.
 
 ## Support / Questions
+
 Raise your questions in this repo or via email to lukas.oldenburg at dim28.ch.
