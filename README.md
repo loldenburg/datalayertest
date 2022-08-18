@@ -27,8 +27,8 @@ InfluxDB
 ![img_4.png](img_4.png)
 Google Cloud Firestore
 
-The Tealium Functions part of this framework is a much-enhanced and partially rewritten fork of Lukasz Cieloch's draft
-which you can view here: TODO Add link
+The Tealium Functions part of this framework is a much-enhanced and partially rewritten fork of Łukasz Cieloch's draft
+which you can view here: https://github.com/LukaszCieloch/automated-event-validation
 
 ## Getting started
 
