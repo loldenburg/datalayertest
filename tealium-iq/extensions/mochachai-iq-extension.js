@@ -38,7 +38,7 @@ TMSHelper.event2DLVarMap = TMSHelper.event2DLVarMap || {}; // INSERT YOUR Data L
 // insert newest shared (between Mocha and Tealium Functions) helper functions via `gulp updateHelpers`
 // @formatter:off
 // Shared TMSHelper functions start
-TMSHelper.ignoreKeysForPlatform={profile1:["variable_that_never_exists_on_profile1"],profile2:["cp.a_cookie_variable_that_never_exists_on_profile2","some_other_variable_that_never_exists_on_profile2"]},TMSHelper.console=function(e,r){var t=!1,t="function"!=typeof TMSHelper.debugActive||TMSHelper.debugActive();(t=r?!0:t)&&console.log(e)},TMSHelper.populated=function(e,r,t){if(!e)return!(!r||0!==e)||!(!t||!1!==e);if(e instanceof Array){if(e.length)for(var n=0,l=e.length;n<l;n++){if(e[n])return!0;if(r&&0===e[n])return!0;if(t&&!1===e[n])return!0}}else if(e)return!0;return!1},TMSHelper.typeOf=function(e){return{}.toString.call(e).match(/\s([a-zA-Z]+)/)[1].toLowerCase()},TMSHelper.shortPreview=function(e,r){if(r=r||50,TMSHelper.populated(e))return e=(e="regexp"===TMSHelper.typeOf(e)?e.toString():JSON.stringify(e)).length>r?e.slice(0,r)+"...":e},TMSHelper.skipTest=function(e,r){if(r=r||(TMSHelper.mochaChaiExt?b:eventData),TMSHelper.ignoreKeysforPlatform[r["ut.profile"]]&&-1!==TMSHelper.ignoreKeysforPlatform[r["ut.profile"]].indexOf(TMSHelper.sanitizeKey(e)))return!0;if(-1===e.search(/^[MT]~/))return!1;r=e.slice(0,2);return TMSHelper.mochaChaiExt?"M~"!==r:"T~"!==r},TMSHelper.sanitizeKey=function(e){return-1===e.search(/^[MT]~/)?e:e.slice(2)},TMSHelper.regExpPrice="/^([1-9]\\d*|0)(\\.\\d{1,2}|)$/",TMSHelper.positiveInt="/^[1-9]\\d*$/",TMSHelper.positiveIntOrZero="/^(zero|[1-9]\\d*)$/",TMSHelper.logicalRegExMatch=function(r,t,e){if(t.hasOwnProperty("switch")){var n=Object.keys(t.switch)[0],t=t.switch[n][e[n]]||t.switch[n].default;if(TMSHelper.mochaChaiExt)return TMSHelper.fullOrRegExMatch(r,t,e);{let e={};return e[r]=t,TMSHelper.fullOrRegExMatch(e)}}TMSHelper.handleError("Unhandled logical test type in TMSHelper.logicalRegExMatch",e,r,"fullOrRegExMatch")},TMSHelper.handleError=function(e,r,t,n){if(TMSHelper.mochaChaiExt)throw Error(e);return error.add(n,t,eventName,e),!1},TMSHelper.functionMatchFunctions={notFallback:function(e,r){var t=e[r];return"fallback"!==(t=t instanceof Array?t[0]:t)||TMSHelper.handleError(r+"is 'fallback'!",e,r,"functionMatch")},validatePageCategory:function(e,r){return!!("Category"!==e.page_type||e[r]&&-1!==e[r].search(/[a-z]+[\-a-z]+/))||TMSHelper.handleError("page_category not defined or false value: "+e[r],e,r,"functionMatch")},ossTermCheck:function(e,r){return TMSHelper.getParameterByName("query",e.url_search)?!!e[r]||TMSHelper.handleError("Search Term ("+r+") not set!",e,r,"functionMatch"):"*"===e[r]||TMSHelper.handleError("Search Term ("+r+") should be *, but is "+e[r],e,r,"functionMatch")}};var short=TMSHelper.shortPreview;
+TMSHelper.ignoreKeysForPlatform={profile1:["variable_that_never_exists_on_profile1"],profile2:["cp.a_cookie_variable_that_never_exists_on_profile2","some_other_variable_that_never_exists_on_profile2"]},TMSHelper.console=function(e,r){var t=!1,t="function"!=typeof TMSHelper.debugActive||TMSHelper.debugActive();(t=r?!0:t)&&console.log(e)},TMSHelper.populated=function(e,r,t){if(!e)return!(!r||0!==e)||!(!t||!1!==e);if(e instanceof Array){if(e.length)for(var n=0,l=e.length;n<l;n++){if(e[n])return!0;if(r&&0===e[n])return!0;if(t&&!1===e[n])return!0}}else if(e)return!0;return!1},TMSHelper.typeOf=function(e){return{}.toString.call(e).match(/\s([a-zA-Z]+)/)[1].toLowerCase()},TMSHelper.shortPreview=function(e,r){if(r=r||50,TMSHelper.populated(e))return e=(e="regexp"===TMSHelper.typeOf(e)?e.toString():JSON.stringify(e)).length>r?e.slice(0,r)+"...":e},TMSHelper.skipTest=function(e,r){if(TMSHelper.ignoreKeysforPlatform[r["ut.profile"]]&&-1!==TMSHelper.ignoreKeysforPlatform[r["ut.profile"]].indexOf(TMSHelper.sanitizeKey(e)))return!0;if(-1===e.search(/^[MT]~/))return!1;r=e.slice(0,2);return TMSHelper.mochaChaiExt?"M~"!==r:"T~"!==r},TMSHelper.sanitizeKey=function(e){return-1===e.search(/^[MT]~/)?e:e.slice(2)},TMSHelper.regExpPrice="/^([1-9]\\d*|0)(\\.\\d{1,2}|)$/",TMSHelper.positiveInt="/^[1-9]\\d*$/",TMSHelper.positiveIntOrZero="/^(zero|[1-9]\\d*)$/",TMSHelper.logicalRegExMatch=function(r,t,e){if(t.hasOwnProperty("switch")){var n=Object.keys(t.switch)[0],t=t.switch[n][e[n]]||t.switch[n].default;if(TMSHelper.mochaChaiExt)return TMSHelper.fullOrRegExMatch(r,t,e);{let e={};return e[r]=t,TMSHelper.fullOrRegExMatch(e)}}TMSHelper.handleError("Unhandled logical test type in TMSHelper.logicalRegExMatch",e,r,"fullOrRegExMatch")},TMSHelper.handleError=function(e,r,t,n){if(TMSHelper.mochaChaiExt)throw Error(e);return error.add(n,t,eventName,e),!1},TMSHelper.functionMatchFunctions={notFallback:function(e,r){var t=e[r];return"fallback"!==(t=t instanceof Array?t[0]:t)||TMSHelper.handleError(r+"is 'fallback'!",e,r,"functionMatch")},validatePageCategory:function(e,r){return!!("Category"!==e.page_type||e[r]&&-1!==e[r].search(/[a-z]+[\-a-z]+/))||TMSHelper.handleError("page_category not defined or false value: "+e[r],e,r,"functionMatch")},ossTermCheck:function(e,r){return TMSHelper.getParameterByName("query",e.url_search)?!!e[r]||TMSHelper.handleError("Search Term ("+r+") not set!",e,r,"functionMatch"):"*"===e[r]||TMSHelper.handleError("Search Term ("+r+") should be *, but is "+e[r],e,r,"functionMatch")}};var short=TMSHelper.shortPreview;
 // Shared TMSHelper functions end
 // @formatter:on
 
@@ -190,7 +190,7 @@ TMSHelper.runDataLayerTests = function (dl) {
         if (populatedAndOfTypeMap) {
             describe('"Populated and of Type" Checks for Event Name ' + eventName, function () {
                 for (var key in populatedAndOfTypeMap) {
-                    if (populatedAndOfTypeMap.hasOwnProperty(key) && !TMSHelper.skipTest(key)) {
+                    if (populatedAndOfTypeMap.hasOwnProperty(key) && !TMSHelper.skipTest(key, dl)) {
                         (function (_dl, _key) { // since we are in a loop and the assert statement is asynchronous,
                             // we need to wrap this in an anonymous function so that the current state of p is evaluated
                             var _keySan = TMSHelper.sanitizeKey(_key); // remove eventual prefixes like M~ from the variable name
@@ -211,7 +211,7 @@ TMSHelper.runDataLayerTests = function (dl) {
             describe('"Full or Regex Match" Checks for Event Name ' + eventName, function () {
                 var fullOrRegExMatchMap = mapForThisEvent.fullOrRegExMatch;
                 for (var key in fullOrRegExMatchMap) {
-                    if (fullOrRegExMatchMap.hasOwnProperty(key) && !TMSHelper.skipTest(key)) {
+                    if (fullOrRegExMatchMap.hasOwnProperty(key) && !TMSHelper.skipTest(key, dl)) {
                         var keySan = TMSHelper.sanitizeKey(key); // remove eventual prefixes like M~ from the variable name
                         if (!TMSHelper.populated(dl[keySan], true, true)) {
                             continue;
@@ -230,7 +230,7 @@ TMSHelper.runDataLayerTests = function (dl) {
             describe('"Function Match" Checks for Event Name ' + eventName, function () {
                 var functionMatchMap = mapForThisEvent.functionMatch;
                 for (var key in functionMatchMap) {
-                    if (functionMatchMap.hasOwnProperty(key) && !TMSHelper.skipTest(key)) {
+                    if (functionMatchMap.hasOwnProperty(key) && !TMSHelper.skipTest(key, dl)) {
                         var keySan = TMSHelper.sanitizeKey(key);
                         if (!TMSHelper.populated(dl[keySan])) {
                             continue;
@@ -312,13 +312,13 @@ TMSHelper.runDataLayerTests = function (dl) {
             TMSHelper.console("Running Tests for Event Name " + en);
             TMSHelper.runEventMapTests(en, mergedSchema, dl);
         });
-        // fire the tests
-        TMSHelper.mergeTestMapsAndFireTests(dl, TMSHelper.event2DLVarMap);
 
-        mocha.run(asyncOnly = false);
-        var style = document.createElement("style");
-        document.head.appendChild(style);
-        style.sheet.insertRule('#mocha-stats { background-color: white; display:block; margin: 7px; border-color:blue; border-style: dotted; border-width: 4px; z-index:1100; opacity: 1;}');
-    }; // end of TMSHelper.runDataLayerTests
-};
-// end of Mocha Extension Code
+    };
+    // fire the tests
+    TMSHelper.mergeTestMapsAndFireTests(dl, TMSHelper.event2DLVarMap);
+
+    mocha.run(asyncOnly = false);
+    var style = document.createElement("style");
+    document.head.appendChild(style);
+    style.sheet.insertRule('#mocha-stats { background-color: white; display:block; margin: 7px; border-color:blue; border-style: dotted; border-width: 4px; z-index:1100; opacity: 1;}');
+}; // end of TMSHelper.runDataLayerTests
