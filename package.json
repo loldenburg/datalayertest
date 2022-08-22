@@ -9,12 +9,12 @@
   "author": "Lukas Oldenburg / Nicola Rohner",
   "license": "ISC",
   "devDependencies": {
-    "jsdoc": "^3.6.10",
     "gulp": "^4.0.2",
-    "gulp-debug": "^4.0.0",
+    "gulp-debug": "^3.2.0",
+    "gulp-jsonminify": "^1.1.0",
     "gulp-rename": "^2.0.0",
     "gulp-replace": "^0.5.3",
     "gulp-uglify": "^3.0.2",
-    "gulp-jsonminify": "^1.1.0"
+    "jsdoc": "^3.6.10"
   }
 }

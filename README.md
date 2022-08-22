@@ -66,9 +66,11 @@ the same page. After successful loading, it triggers the Data Layer Tests in the
 
 ### Tealium Functions
 
-1. Create a Tealium Function of the type "(After) Processed Event".
-2. Paste and review the code from `tealium-functions/unit_test.js`.
-3. Save and Publish your Customer Data Hub Profile.
+1. Create an Event Feed under Event Stream. The Event Feed should include all Events you want to run tests against (e.g.
+   all Events from production environments and website X or Y)
+2. Create a Tealium Function of the type "(After) Processed Event".
+3. Paste and review the code from `tealium-functions/unit_test.js`.
+4. Save and Publish your Customer Data Hub Profile.
 
 ### Gulp Build Functionality
 

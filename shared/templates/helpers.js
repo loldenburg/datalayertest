@@ -32,24 +32,57 @@ TMSHelper.console = function (msg, flag) {
     }
 };
 /**
- * returns true if a variable or an array is actually populated
- * String: not "", not undefined, not null
- * Array: not [], not [""], not [null] not [undefined], not ["","",0]
- * BOOLEAN: not false
- * Integer/float: not 0 / 0.0
- * Object: not undefined
- * @param {*} a - the variable to check
- * @returns Boolean
- * @module tests/populated
- */
-TMSHelper.populated = function (a) {
-    if (!a) return !1;
-    if (a instanceof Array) {
-        if (a.length) {
-            for (var b = 0, c = a.length; b < c; b++) if (a[b]) return !0
+ * populated
+ * @returns true if a variable or an array is populated
+ * @param v: variable to inspect. Can be any type
+ * @param {Boolean} [zero_ok]: if true, zero is considered populated
+ * @param {Boolean} [false_ok]: if true, `false` is considered populated
+ * verifies:
+ * * String: not "", not undefined, not null
+ * * Array: not [], not [""], not [null] not [undefined], not ["","",0]
+ * * BOOLEAN: not false
+ * * Integer/float: not 0 / 0.0
+ * * Object: not undefined
+ * @module helpers/populated
+ **/
+TMSHelper.populated = function (v, zero_ok, false_ok) {
+    if (!v) {
+        if (zero_ok) {
+            if (v === 0) {
+                return true;
+            }
         }
-    } else if (a) return !0;
-    return !1
+        if (false_ok) {
+            if (v === false) {
+                return true;
+            }
+        }
+        return false;
+    }
+    if (v instanceof Array) {
+        if (v.length) {
+            for (var i = 0, ii = v.length; i < ii; i++) {
+                if (v[i]) {
+                    return true;
+                }
+                if (zero_ok) {
+                    if (v[i] === 0) {
+                        return true;
+                    }
+                }
+                if (false_ok) {
+                    if (v[i] === false) {
+                        return true;
+                    }
+                }
+            }
+        }
+    } else {
+        if (v) {
+            return true;
+        }
+    }
+    return false;
 };
 /**
  * gets type of variable (according to utag.ut.typeOf logic: "regexp, array, string, object, number, boolean")
