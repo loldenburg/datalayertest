@@ -114,7 +114,8 @@ TMSHelper.shortPreview = function (val, len) {
     }
 };
 /**
- * checks if a variable has a T~ or M~ prefix and then if the test for it should run on the current testing environment (Teal Func or Mocha)
+ * checks if a variable is in the TMSHelper.ignoreKeysForPlatform ignore list for the current Tealium profile
+ * or if it has a T~ or M~ prefix and then if the test for it should run on the current testing environment (Teal Func or Mocha)
  * @param {string} variable - DL property name
  * @param {object} dl - data layer of current event payload
  * @returns {Boolean} true if test should be skipped
@@ -122,8 +123,8 @@ TMSHelper.shortPreview = function (val, len) {
  */
 TMSHelper.skipTest = function (variable, dl) {
     //check if the variable is in the ignore key list for the current platform
-    if (TMSHelper.ignoreKeysforPlatform[dl["ut.profile"]]) {
-        if (TMSHelper.ignoreKeysforPlatform[dl["ut.profile"]].indexOf(TMSHelper.sanitizeKey(variable)) !== -1) {
+    if (TMSHelper.ignoreKeysForPlatform[dl["ut.profile"]]) {
+        if (TMSHelper.ignoreKeysForPlatform[dl["ut.profile"]].indexOf(TMSHelper.sanitizeKey(variable)) !== -1) {
             return true;
         }
     }
