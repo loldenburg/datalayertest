@@ -1,5 +1,5 @@
 {
-    "import": ["tpl_CartAddEvents"],
+    "import": ["tpl_cartAddEvents"],
     "eventSchema": {
         "populatedAndOfType": {
             "order_id": "!!",
