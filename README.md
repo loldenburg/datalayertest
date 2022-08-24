@@ -14,7 +14,6 @@ In the Tealium iQ (MochaChai) variant, errors are reported visually as you brows
 ![Mocha Chai in JS Tealium iQ Video](Mocha-Chai-JS-Tealium-iQ-video-preview.jpg)
 [YouTube video on MochaChai JS client-side data layer tests](https://www.youtube.com/watch?v=82UoFKqmZHw)
 
-
 In the server-side variant, errors are logged in the Tealium Functions console and/or to your destination of choice (you
 need to set this part up yourself), e.g. a Google Cloud Function + Firestore for deeper debugging and an influxDB for
 monitoring.
