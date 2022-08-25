@@ -197,6 +197,8 @@ TMSHelper.runDataLayerTests = function (dl) {
                             var text = 'must exist and';
                             if (populatedAndOfTypeMap[_key].indexOf("**") === 0) {
                                 text = 'is optional (**), but if exists, must ';
+                            } else if (populatedAndOfTypeMap[_key].indexOf("!!") === 0) {
+                                text = 'must not exist (!!)';
                             }
                             it('Populated and of type: ' + _keySan + ' (' + short(_dl[_keySan]) + ') ' + text + ' be of ' +
                                 'type ' + populatedAndOfTypeMap[_key], function () {
