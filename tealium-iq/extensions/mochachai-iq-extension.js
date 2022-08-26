@@ -269,7 +269,7 @@ TMSHelper.runDataLayerTests = function (dl) {
 
             // For Any Prod Hit, add Prod Tests
             if (TMSHelper.populated(TMSHelper.populated(dl.prod_id))) {
-                eventSchemaArray = TMSHelper.importLib(["anyProdHit"], eventMap, eventSchemaArray);
+                eventSchemaArray = TMSHelper.importLib(["allProdEvents"], eventMap, eventSchemaArray);
             }
 
             if (eventMap[en]) {

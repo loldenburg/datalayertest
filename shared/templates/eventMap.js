@@ -110,7 +110,7 @@ TMSHelper.event2DLVarMap = {
   }
 }
 ,"link__ecommerce__add_cart": {
-    "import": ["tpl_CartAddEvents"],
+    "import": ["tpl_cartAddEvents"],
     "eventSchema": {
         "populatedAndOfType": {
             "order_id": "!!",
