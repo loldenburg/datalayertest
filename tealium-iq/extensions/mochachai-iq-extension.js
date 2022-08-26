@@ -194,14 +194,13 @@ TMSHelper.runDataLayerTests = function (dl) {
                         (function (_dl, _key) { // since we are in a loop and the assert statement is asynchronous,
                             // we need to wrap this in an anonymous function so that the current state of p is evaluated
                             var _keySan = TMSHelper.sanitizeKey(_key); // remove eventual prefixes like M~ from the variable name
-                            var text = 'must exist and';
+                            var text = 'must exist and be of type ' + populatedAndOfTypeMap[_key];
                             if (populatedAndOfTypeMap[_key].indexOf("**") === 0) {
-                                text = 'is optional (**), but if exists, must ';
+                                text = 'is optional (**), but if exists, must be of type ' + populatedAndOfTypeMap[_key];
                             } else if (populatedAndOfTypeMap[_key].indexOf("!!") === 0) {
                                 text = 'must not exist (!!)';
                             }
-                            it('Populated and of type: ' + _keySan + ' (' + short(_dl[_keySan]) + ') ' + text + ' be of ' +
-                                'type ' + populatedAndOfTypeMap[_key], function () {
+                            it('Populated and of type: ' + _keySan + ' (' + short(_dl[_keySan]) + ') ' + text, function () {
                                 assert.isTrue(TMSHelper.populatedAndOfType(_dl[_keySan], populatedAndOfTypeMap[_key]));
                             });
                         })(dl, key);
