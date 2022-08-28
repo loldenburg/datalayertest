@@ -149,30 +149,22 @@ try {
                         if (!TMSHelper.mochaChaiServed) {
                             // Config Vars
                             console.log("Loading mocha + chai libs, get your cup ready!");
-                            if (location.hostname.indexOf("brack.ch") === -1) { // new beta brack requires loading via "require" to avoid conflicts
-                                u.loader({
-                                    "type": "script",
-                                    "src": chaiJSFile,
-                                    "cb": function () {
-                                        console.log("chai loaded, now loading mocha");
-                                        u.loader({
-                                            "type": "script",
-                                            "src": mochaJSFile,
-                                            "cb": u.loader_cb,
-                                            "loc": "script",
-                                            "id": 'utag_##UTID##_2'
-                                        });
-                                    },
-                                    "loc": "script",
-                                    "id": 'utag_##UTID##'
-                                });
-                            } else {
-                                require([chaiJSFile], function (chai) {
-                                    window.chai = chai; // put chai in window scope
-                                    console.log("chai loaded, now loading mocha", 1);
-                                    require([mochaJSFile], u.loader_cb);
-                                });
-                            }
+                            u.loader({
+                                "type": "script",
+                                "src": chaiJSFile,
+                                "cb": function () {
+                                    console.log("chai loaded, now loading mocha");
+                                    u.loader({
+                                        "type": "script",
+                                        "src": mochaJSFile,
+                                        "cb": u.loader_cb,
+                                        "loc": "script",
+                                        "id": 'utag_##UTID##_2'
+                                    });
+                                },
+                                "loc": "script",
+                                "id": 'utag_##UTID##'
+                            });
                         } else {
                             // refresh mocha cache to allow multiple runs on same page
                             mocha.unloadFiles();
