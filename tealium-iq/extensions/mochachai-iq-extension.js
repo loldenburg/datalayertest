@@ -168,13 +168,19 @@ TMSHelper.runDataLayerTests = function (dl) {
 
     // configure mocha/chai
     var assert = chai.assert;
+    // Log to Console (boosted by mocha loca plugin by https://github.com/simov/loca (free under the MIT License))
+    // Logic for mochaOutputToConsole is taken from the Mocha Tag Template
+    if (TMSHelper.mochaOutputToConsole) {
+        mocha.reporter(mocha.WebKit);
+    }
+
     mocha.setup({
-        ui: 'bdd'
-    }); // sets UI
-    mocha.cleanReferencesAfterRun(false);
+        ui: 'bdd',
+        globals: ['']
+    });
 
     // output processed b object to console
-    console.log("--Final processed Data Layer used for Mocha/Chai Tests--", b); // we do this on purpose with console.log because TMSHelper.console may be inactive on purpose to not get flooded with other debug output
+    console.log("--Final processed 'output' Data Layer used for Mocha/Chai Tests--", b); // we do this on purpose with console.log because TMSHelper.console may be inactive on purpose to not get flooded with other debug output
 
     /**
      * Runs tests for a particular Event

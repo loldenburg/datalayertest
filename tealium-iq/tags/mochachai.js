@@ -116,6 +116,25 @@ try {
                         u.initialized = true;
                         /* Start Loader Callback Tag Sending Code */
                         // Insert your post-Loader tag sending code here.
+
+                        /**
+                         * Enable console output for mocha instead of visual output to browser window:
+                         * instead of `&& document.cookie.indexOf("mocha2console") !== -1`, use whatever your criterion is
+                         * for forcing the test output to the console
+                         */
+                        if (!TMSHelper.mochaChaiServed && document.cookie.indexOf("mocha2console") !== -1) {
+                            TMSHelper.mochaOutputToConsole = true;
+                            /*
+                            Loads an optional browser console test reporter.
+                            The code is from https://github.com/simov/loca (free under the MIT License).
+                             */
+                            (function(){function Base(runner){var self=this,stats=this.stats={suites:0,tests:0,passes:0,pending:0,failures:0},failures=this.failures=[];if(!runner)return;this.runner=runner;runner.stats=stats;runner.on('start',function(){stats.start=new Date});runner.on('suite',function(suite){stats.suites=stats.suites||0;suite.root||stats.suites++});runner.on('test end',function(test){stats.tests=stats.tests||0;stats.tests++});runner.on('pass',function(test){stats.passes=stats.passes||0;var medium=test.slow()/2;test.speed=test.duration>test.slow()?'slow':test.duration>medium?'medium':'fast';stats.passes++});runner.on('fail',function(test,err){stats.failures=stats.failures||0;stats.failures++;test.err=err;failures.push(test)});runner.on('end',function(){stats.end=new Date;stats.duration=new Date-stats.start});runner.on('pending',function(){stats.pending++})}
+                            Base.symbols={ok:'✓',err:'✖',dot:'․'};var styles={bold:'font-weight:bold;',normal:'font-weight:normal;',success:'color:green;',pending:'color:blue;',fail:'color:red;',suite:'font-weight:bold;',slow:'color:white; background:red; border-radius:5px; padding:0 4px;',medium:'color:white; background:orange; border-radius:5px; padding:0 4px;'};function WebKit(runner){Base.call(this,runner);var self=this,stats=this.stats,failures=0;runner.on('start',function(){console.time('duration')});runner.on('suite',function(suite){if(suite.root)return;console.group('%c'+suite.title,styles.suite)});runner.on('suite end',function(suite){if(suite.root)return;console.groupEnd()});runner.on('pending',function(test){console.log('%c- '+test.title,styles.pending)});runner.on('pass',function(test){if('fast'==test.speed){console.log('%c'+Base.symbols.ok+' '+test.title,styles.success)}else if('medium'==test.speed){console.log('%c'+Base.symbols.ok+' '+test.title+' %c'+test.duration,styles.success,styles.medium)}else{console.log('%c'+Base.symbols.ok+' '+test.title+' %c'+test.duration,styles.success,styles.slow)}});runner.on('fail',function(test,err){console.error(++failures+') '+test.title+'%O',err)});runner.on('end',function(){var stats=this.stats;console.timeEnd('duration');console.log('%c'+(stats.passes||0)+' passing',styles.success);if(stats.pending){console.log('%c'+stats.pending+' pending',styles.pending)}
+                            if(stats.failures){console.log('%c'+stats.failures+' failing','color:red;');errors.call(this,this.failures)}}.bind(this));function errors(failures){failures.forEach(function(test,i){var err=test.err,message=err.message||'',stack=err.stack||message,index=stack.indexOf(message)+message.length,msg=stack.slice(0,index),actual=err.actual,expected=err.expected,escape=!0;if(err.uncaught){msg='Uncaught '+msg}
+                            stack=stack.slice(index?index+1:index).replace(/^/gm,'  ');let errorMsg=(i+1)+') '+test.fullTitle()+'\n%c'+msg+'\n%c'+stack;console.error(errorMsg,styles.bold,styles.normal)})}}
+                            mocha.WebKit=WebKit})()
+                        }
+
                         TMSHelper.mochaChaiServed = true;
                         console.log("mocha: in u.loader_cb", 1);
                         if (typeof window.chai === "object" && typeof window.mocha === "object") {
