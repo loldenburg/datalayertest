@@ -35,7 +35,7 @@ which you can view here: https://github.com/LukaszCieloch/automated-event-valida
 This "getting started" guide only shows how to set up the components in Tealium. To actually benefit from these
 componentes, you of course need to define the actual Data Layer tests. For this, see the chapters after this one.
 
-### Tealium iQ
+### Tealium iQ (Mocha & Chai JS)
 
 You need
 
@@ -64,7 +64,25 @@ the same page. After successful loading, it triggers the Data Layer Tests in the
 4. The Extension should ideally be the last one in your execution order.
 5. Publish your Tealium Profile.
 
-### Tealium Functions
+#### Log to the console instead of the browser window (optional)
+
+To enable logging mocha test results to the console instead of the browser window, you can set a cookie "mocha2console" to any value, e.g. by
+executing this in your browser console:
+
+```javascript
+document.cookie = "mocha2console=123";
+```
+
+To change the criteria for logging to the console, change `document.cookie.indexOf("mocha2console") !== -1` in
+the `tealium-iq/tags/mochachai.js` file to anything that makes sense in your case.
+
+#### Run scenarios automatically
+
+This framework can also be a good anchor point for automatically run scenarios like a checkout. To record and (re-)run or export/import scenarios, you can use Chrome
+Recorder, part of Chrome’s Developer Tools. Check out this video how to:
+https://www.youtube.com/watch?v=TLJCfYltMEc 
+
+### Tealium Functions (server-side testing)
 
 1. Create an Event Feed under Event Stream. The Event Feed should include all Events you want to run tests against (e.g.
    all Events from production environments and website X or Y)
