@@ -166,6 +166,11 @@ TMSHelper.ignoreKeysForPlatform={profile1:["variable_that_never_exists_on_profil
             if (TMSHelper.skipTest(key, eventData)) {
                 continue;
             }
+            if (TMSHelper.typeOf(testMap[key]) === "object") {
+                // if the test definition is an object, it must be a logical test (eg switch)
+                TMSHelper.logicalTest(key, testMap[key], eventData,"populatedAndOfType");
+                continue;
+            }
             // key = unsanitized key from testmap, e.g. "T~prod_id"
             var keySan = TMSHelper.sanitizeKey(key); // keySan = sanitized key, e.g. "prod_id"
             var val = eventData[keySan]; // val = data layer value
@@ -176,6 +181,7 @@ TMSHelper.ignoreKeysForPlatform={profile1:["variable_that_never_exists_on_profil
             var typeOfResult = TMSHelper.typeOf(val);
 
             // not populated (value = "!!")
+
             if (testPrefix === "!!") {
                 TMSHelper.notPopulated(keySan);
                 continue;
@@ -314,7 +320,7 @@ TMSHelper.ignoreKeysForPlatform={profile1:["variable_that_never_exists_on_profil
             }
             if (TMSHelper.typeOf(testMap[key]) === "object") {
                 // if the test definition is an object, it must be a logical test (eg switch)
-                TMSHelper.logicalRegExMatch(key, testMap[key], eventData);
+                TMSHelper.logicalTest(key, testMap[key], eventData,"fullOrRegExMatch");
                 continue;
             }
             // key = unsanitized key from testmap, e.g. "T~prod_id"

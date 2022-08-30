@@ -177,24 +177,24 @@ TMSHelper.positiveIntOrZero = "/^(zero|[1-9]\\d*)$/";
  * @param {string} dlvar - dataLayer variable name
  * @param {object} testDef - Object with the logical test definitions e.g. switch definition
  * @param  {object} _dl - dataLayer
- * @returns {*} result of a fullOrRegExMatch for the logical test
- * @module tests/logicalRegExMatch
+ * @param {string} testType - type of test to run (e.g. "fullOrRegexMatch")
+ * @returns {*} result of a match/test for the logical test
+ * @module tests/logicalTest
  */
-TMSHelper.logicalRegExMatch = function (dlvar, testDef, _dl) {
+TMSHelper.logicalTest = function (dlvar, testDef, _dl, testType) {
     if (testDef.hasOwnProperty("switch")) {
         // switchOn = the first and only key has the variable name to switch on (e.g. "ut.profile")
         let switchOn = Object.keys(testDef.switch)[0];
-        // switchKey = the key of the switch object that contains the values on which to switch (e.g. "main")
         // if the dl value (eg "main") for the var on which to switch (eg dl["ut.profile"]) is not defined as a value to switch on in the test definition, we check for the default
         let theTest = testDef.switch[switchOn][_dl[switchOn]] || testDef.switch[switchOn]["default"];
         if (!TMSHelper.mochaChaiExt) {
             let testMap = {};
             testMap[dlvar] = theTest;
-            return TMSHelper.fullOrRegExMatch(testMap);
+            return TMSHelper[testType](testMap);
         } // otherwise in Mocha:
-        return TMSHelper.fullOrRegExMatch(dlvar, theTest, _dl); // ignore IDE error because mocha's fullOrRegExMatch expects different parameters
+        return TMSHelper[testType](dlvar, theTest, _dl); // ignore IDE error because mocha's fullOrRegExMatch expects different parameters
     } else {
-        TMSHelper.handleError("Unhandled logical test type in TMSHelper.logicalRegExMatch", _dl, dlvar, "fullOrRegExMatch");
+        TMSHelper.handleError("Unhandled logical test type", _dl, dlvar, testType);
     }
 };
 /**
