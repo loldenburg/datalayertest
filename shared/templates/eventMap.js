@@ -61,19 +61,19 @@ TMSHelper.event2DLVarMap = {
         "cart_content": "**object"
     }
 }
-,"anyProdHit": {
+,"allProdEvents": {
   "import": [
-    "anyProdHitRegexSchema",
-    "anyProdHitTypeSchema",
-    "anyProdHitFunctionSchema"
+    "allProdEventsRegexSchema",
+    "allProdEventsTypeSchema",
+    "allProdEventsFunctionSchema"
   ]
 }
-,"anyProdHitFunctionSchema": {
+,"allProdEventsFunctionSchema": {
   "functionMatch": {
     "prod_action": "notFallback"
   }
 }
-,"anyProdHitRegexSchema": {
+,"allProdEventsRegexSchema": {
   "fullOrRegExMatch": {
     "prod_id": "/^[1-9]\\d+$/",
     "firstProd_id": "/^[1-9]\\d+$/",
@@ -93,7 +93,7 @@ TMSHelper.event2DLVarMap = {
     "prod_action": "/^[a-z0-9_]+$/"
   }
 }
-,"anyProdHitTypeSchema": {
+,"allProdEventsTypeSchema": {
   "populatedAndOfType": {
     "prod_action": "array",
     "prod_cat_l1": "array",

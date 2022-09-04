@@ -1,7 +1,0 @@
-{
-  "import": [
-    "anyProdHitRegexSchema",
-    "anyProdHitTypeSchema",
-    "anyProdHitFunctionSchema"
-  ]
-}

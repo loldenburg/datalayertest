@@ -66,7 +66,8 @@ the same page. After successful loading, it triggers the Data Layer Tests in the
 
 #### Log to the console instead of the browser window (optional)
 
-To enable logging mocha test results to the console instead of the browser window, you can set a cookie "mocha2console" to any value, e.g. by
+To enable logging mocha test results to the console instead of the browser window, you can set a cookie "mocha2console"
+to any value, e.g. by
 executing this in your browser console:
 
 ```javascript
@@ -78,9 +79,10 @@ the `tealium-iq/tags/mochachai.js` file to anything that makes sense in your cas
 
 #### Run scenarios automatically
 
-This framework can also be a good anchor point for automatically run scenarios like a checkout. To record and (re-)run or export/import scenarios, you can use Chrome
+This framework can also be a good anchor point for automatically run scenarios like a checkout. To record and (re-)run
+or export/import scenarios, you can use Chrome
 Recorder, part of Chrome’s Developer Tools. Check out this video how to:
-https://www.youtube.com/watch?v=TLJCfYltMEc 
+https://www.youtube.com/watch?v=TLJCfYltMEc
 
 ### Tealium Functions (server-side testing)
 
@@ -113,15 +115,15 @@ __Examples:__
 The script will look if there is a test defined for the given Event Name in the testing map (`TMSHelper.event2DLVarMap`)
 . If so, it imports the test schema and execute the test.
 
-#### The `allEvents` and `anyProdHit` Tests
+#### The `allEvents` and `allProdEvents` Tests
 
 Even if an event name has no specific test defined yet, the `allEvents` test will always run. Similarly, if an Event has
-a `prod_id` property, it is assumed that this is a product-specific Event, so the `anyProdHit` test will also run. In
+a `prod_id` property, it is assumed that this is a product-specific Event, so the `allProdEvents` test will also run. In
 these "all-encompassing" tests, you should specify all the variables that should always be there and what they are
 expected to look like.
 
 This allows you to reduce the event-specific test definitions to only those variables that are different for that
-particular event. So the more you handle in the allEvents and anyProdHit tests, the more you can scale your tests and
+particular event. So the more you handle in the allEvents and allProdEvents tests, the more you can scale your tests and
 avoid redundancies.
 
 ### What is a good Event Name?
@@ -219,6 +221,7 @@ mimicks Tealium's own `ut.typeOf` function.
 * `!!` = "must _not_ be populated". Example: `"order_id": "!!"`. Test passes if the given data layer variable is not
   populated (
   not `undefined, null, "", false, []`).
+* switch statements (if var a == b, then c == d): see Logical Tests (Switch Statements) below
 
 Example:
 
@@ -246,10 +249,6 @@ TMSHelper Object and you can add to them by changing the `shared/templates/helpe
 example, `"//positiveInt"` will check `TMSHelper.positiveInt`. If the definition of TMSHelper.positiveInt (a positive
 integer number) ever changes, you don't need to update all test schemas using it.
 
-In more complex cases, you can use switches to check if a given data layer variable's value matches the given RegEx
-depending on the given switch Key. Example below: Check url_rootDomain and switch on `ut.profile`. The `default` allows
-you to specify a fallback (in case `ut.profile` does not match any of the other values provided).
-
 Example:
 
 ```json
@@ -258,7 +257,24 @@ Example:
     "prod_action": "detail",
     "prod_stock": "/^(n|[1-9]\\d*)$/",
     "page_type": "Product",
-    "prod_id": "//positiveInt",
+    "prod_id": "//positiveInt"
+  }
+}
+```
+
+##### Logical Tests (Switch Statements)
+
+In more complex cases, you can use switches to check if a given data layer variable's value matches the given RegEx
+depending on the given switch Key. This works for `populatedAndOfType` and `fullOrRegExMatch`.
+
+Example below: Check url_rootDomain and switch on `ut.profile`. The `default` allows
+you to specify a fallback (in case `ut.profile` does not match any of the other values provided).
+
+Example:
+
+```json
+{
+  "fullOrRegExMatch": {
     "url_rootDomain": {
       "switch": {
         "ut.profile": {

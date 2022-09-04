@@ -1,0 +1,7 @@
+{
+  "import": [
+    "allProdEventsRegexSchema",
+    "allProdEventsTypeSchema",
+    "allProdEventsFunctionSchema"
+  ]
+}
