@@ -119,7 +119,7 @@ TMSHelper.shortPreview = function (val, len) {
  * @param {string} variable - DL property name
  * @param {object} dl - data layer of current event payload
  * @returns {Boolean} true if test should be skipped
- * @module tests/skipTest
+ * @module helpers/skipTest
  */
 TMSHelper.skipTest = function (variable, dl) {
     //check if the variable is in the ignore key list for the current platform
@@ -141,7 +141,7 @@ TMSHelper.skipTest = function (variable, dl) {
  * Cleans keys from prefixes (currently M~ or T~, but can be extended)
  * @param {string} key - the data layer property name
  * @returns {string} - the sanitized key
- * @module tests/sanitizeKey
+ * @module helpers/sanitizeKey
  */
 TMSHelper.sanitizeKey = function (key) {
     if (key.search(/^[MT]~/) === -1) {
@@ -153,7 +153,7 @@ TMSHelper.sanitizeKey = function (key) {
  * Mocha/Chai: a RegExp to check any kind of price to be either in format 100.30 or 1 (int)
  * @type {string}
  *
- * @module tests/regExpPrice
+ * @module helpers/regExpPrice
  */
 TMSHelper.regExpPrice = "/^([1-9]\\d*|0)(\\.\\d{1,2}|)$/";
 
@@ -161,7 +161,7 @@ TMSHelper.regExpPrice = "/^([1-9]\\d*|0)(\\.\\d{1,2}|)$/";
  * Mocha/Chai: a RegExp to check if a value is a positive integer
  * @type {string}
  *
- * @module tests/positiveInt
+ * @module helpers/positiveInt
  */
 TMSHelper.positiveInt = "/^[1-9]\\d*$/";
 
@@ -169,7 +169,7 @@ TMSHelper.positiveInt = "/^[1-9]\\d*$/";
  * Mocha/Chai: a RegExp to check if a value is a positive integer
  * @type {string}
  *
- * @module tests/positiveIntOrZero
+ * @module helpers/positiveIntOrZero
  */
 TMSHelper.positiveIntOrZero = "/^(zero|[1-9]\\d*)$/";
 /**
@@ -179,7 +179,7 @@ TMSHelper.positiveIntOrZero = "/^(zero|[1-9]\\d*)$/";
  * @param  {object} _dl - dataLayer
  * @param {string} testType - type of test to run (e.g. "fullOrRegexMatch")
  * @returns {Boolean} result of the logical test
- * @module tests/logicalTest
+ * @module helpers/logicalTest
  */
 TMSHelper.logicalTest = function (dlvar, testDef, _dl, testType) {
     if (testDef.hasOwnProperty("switch")) {
@@ -205,7 +205,7 @@ TMSHelper.logicalTest = function (dlvar, testDef, _dl, testType) {
  * @param {string} prop - the key in the data layer we are testing
  * @param {string} testType - the type of test we are running (e.g. "functionMatch")
  * @returns {boolean}
- * @module tests/handleError
+ * @module helpers/handleError
  */
 TMSHelper.handleError = function (msg, dl, prop, testType) {
     if (!TMSHelper.mochaChaiExt) {
@@ -219,7 +219,7 @@ TMSHelper.handleError = function (msg, dl, prop, testType) {
  * The functions here are only for illustrative purposes, feel free to remove them
  * A function is not tied to a particular variable
  * @type {Object}
- * @module tests/functionMatchFunctions
+ * @module helpers/functionMatchFunctions
  */
 TMSHelper.functionMatchFunctions = {
     /**
@@ -257,7 +257,7 @@ TMSHelper.functionMatchFunctions = {
      * @param {object} dl: the data layer
      * @param {string} prop: the key in the data layer that contains the search term
      * @returns {Boolean} true or throws Error
-     * @module tests/ossTermCheck
+     * @module helpers/ossTermCheck
      */
     ossTermCheck: function (dl, prop) {
         if (TMSHelper.getParameterByName("query", dl["url_search"])) { // url param "query" exists

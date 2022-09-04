@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Module: helpers/populated</title>
+    <title>JSDoc: Module: tests/fullOrRegExMatchMocha</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Module: helpers/populated</h1>
+    <h1 class="page-title">Module: tests/fullOrRegExMatchMocha</h1>
 
     
 
@@ -38,7 +38,9 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>populated</p></div>
+            <div class="description"><p>fullOrRegExMatch: checks a variable value v against c (a &quot;string&quot; = full match, a &quot;/regexstr/&quot; = regexp match)
+if value to check is an object, a logical test is run (similar to populatedAndOfType)
+if value to check is an Array, all Array members are checked</p></div>
         
 
         
@@ -67,8 +69,6 @@
         <th>Type</th>
 
         
-        <th>Attributes</th>
-        
 
         
 
@@ -81,100 +81,72 @@
 
         <tr>
             
-                <td class="name"><code>v:</code></td>
+                <td class="name"><code>prop</code></td>
             
 
             <td class="type">
             
+                
+<span class="param-type">*</span>
+
+
+            
             </td>
 
             
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
 
             
 
-            <td class="description last"><p>variable to inspect. Can be any type</p></td>
+            <td class="description last"><p>value to check (e.g. value of a data layer variable)</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>zero_ok</code></td>
+                <td class="name"><code>theTest</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Boolean</span>
+<span class="param-type">string</span>
+|
+
+<span class="param-type">object</span>
 
 
             
             </td>
 
             
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
 
             
 
-            <td class="description last"><p>if true, zero is considered populated</p></td>
+            <td class="description last"><p>if &quot;string&quot; = full match, if &quot;/regExpStr/&quot; -&gt; RegExp check expected type, if object = logical test</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>false_ok</code></td>
+                <td class="name"><code>dl</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Boolean</span>
+<span class="param-type">object</span>
 
 
             
             </td>
 
             
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
 
             
 
-            <td class="description last"><p>if true, <code>false</code> is considered populated
-verifies:</p>
-<ul>
-<li>String: not &quot;&quot;, not undefined, not null</li>
-<li>Array: not [], not [&quot;&quot;], not [null] not [undefined], not [&quot;&quot;,&quot;&quot;,0]</li>
-<li>BOOLEAN: not false</li>
-<li>Integer/float: not 0 / 0.0</li>
-<li>Object: not undefined</li>
-</ul></td>
+            <td class="description last"><p>current data layer</p></td>
         </tr>
 
     
@@ -215,7 +187,7 @@ verifies:</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="shared_templates_helpers.js.html">shared/templates/helpers.js</a>, <a href="shared_templates_helpers.js.html#line34">line 34</a>
+        <a href="tealium-iq_extensions_mochachai-iq-extension.js.html">tealium-iq/extensions/mochachai-iq-extension.js</a>, <a href="tealium-iq_extensions_mochachai-iq-extension.js.html#line98">line 98</a>
     </li></ul></dd>
     
 
@@ -243,11 +215,19 @@ verifies:</p>
 <h5>Returns:</h5>
 
         
-<div class="param-desc">
-    <p>true if a variable or an array is populated</p>
-</div>
 
 
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">boolean</span>
+
+
+    </dd>
+</dl>
 
     
 

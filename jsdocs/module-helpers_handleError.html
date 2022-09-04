@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Module: helpers/populated</title>
+    <title>JSDoc: Module: helpers/handleError</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Module: helpers/populated</h1>
+    <h1 class="page-title">Module: helpers/handleError</h1>
 
     
 
@@ -38,7 +38,8 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>populated</p></div>
+            <div class="description"><p>handles Errors in a way that is compatible with both Mocha &amp; Tealium Unit Tests,
+i.e. throws an Error in Mocha and logs to the error array in Tealium Unit Tests.</p></div>
         
 
         
@@ -67,8 +68,6 @@
         <th>Type</th>
 
         
-        <th>Attributes</th>
-        
 
         
 
@@ -81,100 +80,92 @@
 
         <tr>
             
-                <td class="name"><code>v:</code></td>
+                <td class="name"><code>msg</code></td>
             
 
             <td class="type">
             
+                
+<span class="param-type">string</span>
+
+
+            
             </td>
 
             
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
 
             
 
-            <td class="description last"><p>variable to inspect. Can be any type</p></td>
+            <td class="description last"><p>error message to log</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>zero_ok</code></td>
+                <td class="name"><code>dl</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Boolean</span>
+<span class="param-type">object</span>
 
 
             
             </td>
 
             
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
 
             
 
-            <td class="description last"><p>if true, zero is considered populated</p></td>
+            <td class="description last"><p>the data layer</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>false_ok</code></td>
+                <td class="name"><code>prop</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Boolean</span>
+<span class="param-type">string</span>
 
 
             
             </td>
 
             
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
 
-                
+            
 
+            <td class="description last"><p>the key in the data layer we are testing</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>testType</code></td>
+            
+
+            <td class="type">
+            
                 
-                </td>
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
             
 
             
 
-            <td class="description last"><p>if true, <code>false</code> is considered populated
-verifies:</p>
-<ul>
-<li>String: not &quot;&quot;, not undefined, not null</li>
-<li>Array: not [], not [&quot;&quot;], not [null] not [undefined], not [&quot;&quot;,&quot;&quot;,0]</li>
-<li>BOOLEAN: not false</li>
-<li>Integer/float: not 0 / 0.0</li>
-<li>Object: not undefined</li>
-</ul></td>
+            <td class="description last"><p>the type of test we are running (e.g. &quot;functionMatch&quot;)</p></td>
         </tr>
 
     
@@ -215,7 +206,7 @@ verifies:</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="shared_templates_helpers.js.html">shared/templates/helpers.js</a>, <a href="shared_templates_helpers.js.html#line34">line 34</a>
+        <a href="shared_templates_helpers.js.html">shared/templates/helpers.js</a>, <a href="shared_templates_helpers.js.html#line200">line 200</a>
     </li></ul></dd>
     
 
@@ -243,11 +234,19 @@ verifies:</p>
 <h5>Returns:</h5>
 
         
-<div class="param-desc">
-    <p>true if a variable or an array is populated</p>
-</div>
 
 
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">boolean</span>
+
+
+    </dd>
+</dl>
 
     
 

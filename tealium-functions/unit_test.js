@@ -9,6 +9,7 @@ var dbgActive = !event.data.udo; // if event.data.udo doesn't exist, set dbg to 
 /**
  * console output if dbgActive is true (set at start of script)
  * @param message {*} - message to output
+ * @module tests/dbg
  */
 const dbg = function (message) {
     if (dbgActive) {

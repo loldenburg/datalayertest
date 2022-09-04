@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Module: helpers/populated</title>
+    <title>JSDoc: Module: helpers/skipTest</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Module: helpers/populated</h1>
+    <h1 class="page-title">Module: helpers/skipTest</h1>
 
     
 
@@ -38,7 +38,8 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>populated</p></div>
+            <div class="description"><p>checks if a variable is in the TMSHelper.ignoreKeysForPlatform ignore list for the current Tealium profile
+or if it has a T~ or M~ prefix and then if the test for it should run on the current testing environment (Teal Func or Mocha)</p></div>
         
 
         
@@ -67,8 +68,6 @@
         <th>Type</th>
 
         
-        <th>Attributes</th>
-        
 
         
 
@@ -81,100 +80,46 @@
 
         <tr>
             
-                <td class="name"><code>v:</code></td>
+                <td class="name"><code>variable</code></td>
             
 
             <td class="type">
             
+                
+<span class="param-type">string</span>
+
+
+            
             </td>
 
             
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
 
             
 
-            <td class="description last"><p>variable to inspect. Can be any type</p></td>
+            <td class="description last"><p>DL property name</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>zero_ok</code></td>
+                <td class="name"><code>dl</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Boolean</span>
+<span class="param-type">object</span>
 
 
             
             </td>
 
             
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
 
             
 
-            <td class="description last"><p>if true, zero is considered populated</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>false_ok</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Boolean</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last"><p>if true, <code>false</code> is considered populated
-verifies:</p>
-<ul>
-<li>String: not &quot;&quot;, not undefined, not null</li>
-<li>Array: not [], not [&quot;&quot;], not [null] not [undefined], not [&quot;&quot;,&quot;&quot;,0]</li>
-<li>BOOLEAN: not false</li>
-<li>Integer/float: not 0 / 0.0</li>
-<li>Object: not undefined</li>
-</ul></td>
+            <td class="description last"><p>data layer of current event payload</p></td>
         </tr>
 
     
@@ -215,7 +160,7 @@ verifies:</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="shared_templates_helpers.js.html">shared/templates/helpers.js</a>, <a href="shared_templates_helpers.js.html#line34">line 34</a>
+        <a href="shared_templates_helpers.js.html">shared/templates/helpers.js</a>, <a href="shared_templates_helpers.js.html#line116">line 116</a>
     </li></ul></dd>
     
 
@@ -244,10 +189,22 @@ verifies:</p>
 
         
 <div class="param-desc">
-    <p>true if a variable or an array is populated</p>
+    <p>true if test should be skipped</p>
 </div>
 
 
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Boolean</span>
+
+
+    </dd>
+</dl>
 
     
 

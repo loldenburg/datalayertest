@@ -122,13 +122,13 @@ TMSHelper.typeOf = function (e) {
     return ({}).toString.call(e).match(/\s([a-zA-Z]+)/)[1].toLowerCase();
 };
 /**
- * shortPreview: gives a (by default 50-character) short preview of a variable's value, e.g. to not show all 78 array values
+ * shortPreview: gives a (by default 80-character) short preview of a variable's value, e.g. to not show all 78 array values
  * @param {*} val - value to preview
  * @param {number} [len] - how many characters short
  * @module tests/shortPreview
  */
 TMSHelper.shortPreview = function (val, len) {
-    len = len || 50;
+    len = len || 80;
     if (TMSHelper.populated(val)) {
         if (TMSHelper.typeOf(val) === "regexp") {
             val = val.toString();
@@ -147,7 +147,7 @@ TMSHelper.shortPreview = function (val, len) {
  * @param {string} variable - DL property name
  * @param {object} dl - data layer of current event payload
  * @returns {Boolean} true if test should be skipped
- * @module tests/skipTest
+ * @module helpers/skipTest
  */
 TMSHelper.skipTest = function (variable, dl) {
     //check if the variable is in the ignore key list for the current platform
@@ -169,7 +169,7 @@ TMSHelper.skipTest = function (variable, dl) {
  * Cleans keys from prefixes (currently M~ or T~, but can be extended)
  * @param {string} key - the data layer property name
  * @returns {string} - the sanitized key
- * @module tests/sanitizeKey
+ * @module helpers/sanitizeKey
  */
 TMSHelper.sanitizeKey = function (key) {
     if (key.search(/^[MT]~/) === -1) {
@@ -181,7 +181,7 @@ TMSHelper.sanitizeKey = function (key) {
  * Mocha/Chai: a RegExp to check any kind of price to be either in format 100.30 or 1 (int)
  * @type {string}
  *
- * @module tests/regExpPrice
+ * @module helpers/regExpPrice
  */
 TMSHelper.regExpPrice = "/^([1-9]\\d*|0)(\\.\\d{1,2}|)$/";
 
@@ -189,7 +189,7 @@ TMSHelper.regExpPrice = "/^([1-9]\\d*|0)(\\.\\d{1,2}|)$/";
  * Mocha/Chai: a RegExp to check if a value is a positive integer
  * @type {string}
  *
- * @module tests/positiveInt
+ * @module helpers/positiveInt
  */
 TMSHelper.positiveInt = "/^[1-9]\\d*$/";
 
@@ -197,32 +197,32 @@ TMSHelper.positiveInt = "/^[1-9]\\d*$/";
  * Mocha/Chai: a RegExp to check if a value is a positive integer
  * @type {string}
  *
- * @module tests/positiveIntOrZero
+ * @module helpers/positiveIntOrZero
  */
 TMSHelper.positiveIntOrZero = "/^(zero|[1-9]\\d*)$/";
 /**
- * checks which type of logical test is used and return testMap
+ * checks which type of logical test is used and runs it
  * @param {string} dlvar - dataLayer variable name
  * @param {object} testDef - Object with the logical test definitions e.g. switch definition
  * @param  {object} _dl - dataLayer
- * @returns {*} result of a fullOrRegExMatch for the logical test
- * @module tests/logicalRegExMatch
+ * @param {string} testType - type of test to run (e.g. "fullOrRegexMatch")
+ * @returns {Boolean} result of the logical test
+ * @module helpers/logicalTest
  */
-TMSHelper.logicalRegExMatch = function (dlvar, testDef, _dl) {
+TMSHelper.logicalTest = function (dlvar, testDef, _dl, testType) {
     if (testDef.hasOwnProperty("switch")) {
         // switchOn = the first and only key has the variable name to switch on (e.g. "ut.profile")
         let switchOn = Object.keys(testDef.switch)[0];
-        // switchKey = the key of the switch object that contains the values on which to switch (e.g. "main")
         // if the dl value (eg "main") for the var on which to switch (eg dl["ut.profile"]) is not defined as a value to switch on in the test definition, we check for the default
         let theTest = testDef.switch[switchOn][_dl[switchOn]] || testDef.switch[switchOn]["default"];
         if (!TMSHelper.mochaChaiExt) {
             let testMap = {};
             testMap[dlvar] = theTest;
-            return TMSHelper.fullOrRegExMatch(testMap);
+            return TMSHelper[testType](testMap);
         } // otherwise in Mocha:
-        return TMSHelper.fullOrRegExMatch(dlvar, theTest, _dl); // ignore IDE error because mocha's fullOrRegExMatch expects different parameters
+        return TMSHelper[testType](dlvar, theTest, _dl); // ignore IDE error because mocha's fullOrRegExMatch expects different parameters
     } else {
-        TMSHelper.handleError("Unhandled logical test type in TMSHelper.logicalRegExMatch", _dl, dlvar, "fullOrRegExMatch");
+        TMSHelper.handleError("Unhandled logical test type", _dl, dlvar, testType);
     }
 };
 /**
@@ -233,7 +233,7 @@ TMSHelper.logicalRegExMatch = function (dlvar, testDef, _dl) {
  * @param {string} prop - the key in the data layer we are testing
  * @param {string} testType - the type of test we are running (e.g. "functionMatch")
  * @returns {boolean}
- * @module tests/handleError
+ * @module helpers/handleError
  */
 TMSHelper.handleError = function (msg, dl, prop, testType) {
     if (!TMSHelper.mochaChaiExt) {
@@ -247,7 +247,7 @@ TMSHelper.handleError = function (msg, dl, prop, testType) {
  * The functions here are only for illustrative purposes, feel free to remove them
  * A function is not tied to a particular variable
  * @type {Object}
- * @module tests/functionMatchFunctions
+ * @module helpers/functionMatchFunctions
  */
 TMSHelper.functionMatchFunctions = {
     /**
@@ -285,7 +285,7 @@ TMSHelper.functionMatchFunctions = {
      * @param {object} dl: the data layer
      * @param {string} prop: the key in the data layer that contains the search term
      * @returns {Boolean} true or throws Error
-     * @module tests/ossTermCheck
+     * @module helpers/ossTermCheck
      */
     ossTermCheck: function (dl, prop) {
         if (TMSHelper.getParameterByName("query", dl["url_search"])) { // url param "query" exists
@@ -310,13 +310,13 @@ var short = TMSHelper.shortPreview;</code></pre>
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-helpers_console.html">helpers/console</a></li><li><a href="module-helpers_getParameterByName.html">helpers/getParameterByName</a></li><li><a href="module-helpers_populated.html">helpers/populated</a></li><li><a href="module-helpers_typeOf.html">helpers/typeOf</a></li><li><a href="module-tests_event2DLVarMap.html">tests/event2DLVarMap</a></li><li><a href="module-tests_fullOrRegExMatch.html">tests/fullOrRegExMatch</a></li><li><a href="module-tests_functionMatchFunctions.html">tests/functionMatchFunctions</a></li><li><a href="module-tests_getEvent2DLVarMap.html">tests/getEvent2DLVarMap</a></li><li><a href="module-tests_getEvent2DLVarMap_get.html">tests/getEvent2DLVarMap/get</a></li><li><a href="module-tests_handleError.html">tests/handleError</a></li><li><a href="module-tests_ignoreKeysForPlatform.html">tests/ignoreKeysForPlatform</a></li><li><a href="module-tests_importLibTealFunctions.html">tests/importLibTealFunctions</a></li><li><a href="module-tests_logErrorToGCF.html">tests/logErrorToGCF</a></li><li><a href="module-tests_logicalRegExMatch.html">tests/logicalRegExMatch</a></li><li><a href="module-tests_mergeTestMapsAndFireTests.html">tests/mergeTestMapsAndFireTests</a></li><li><a href="module-tests_mochaChaiExt.html">tests/mochaChaiExt</a></li><li><a href="module-tests_notPopulatedthrow.html">tests/notPopulatedthrow</a></li><li><a href="module-tests_ossTermCheck.html">tests/ossTermCheck</a></li><li><a href="module-tests_populatedAndOfType.html">tests/populatedAndOfType</a></li><li><a href="module-tests_positiveInt.html">tests/positiveInt</a></li><li><a href="module-tests_positiveIntOrZero.html">tests/positiveIntOrZero</a></li><li><a href="module-tests_regExpPrice.html">tests/regExpPrice</a></li><li><a href="module-tests_runDataLayerTests.html">tests/runDataLayerTests</a></li><li><a href="module-tests_runEventMapTests.html">tests/runEventMapTests</a></li><li><a href="module-tests_sanitizeKey.html">tests/sanitizeKey</a></li><li><a href="module-tests_sendDataToInfluxDB.html">tests/sendDataToInfluxDB</a></li><li><a href="module-tests_shortPreview.html">tests/shortPreview</a></li><li><a href="module-tests_skipTest.html">tests/skipTest</a></li></ul><h3>Global</h3><ul><li><a href="global.html#dbg">dbg</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-helpers_console.html">helpers/console</a></li><li><a href="module-helpers_functionMatchFunctions.html">helpers/functionMatchFunctions</a></li><li><a href="module-helpers_getParameterByName.html">helpers/getParameterByName</a></li><li><a href="module-helpers_handleError.html">helpers/handleError</a></li><li><a href="module-helpers_logicalTest.html">helpers/logicalTest</a></li><li><a href="module-helpers_ossTermCheck.html">helpers/ossTermCheck</a></li><li><a href="module-helpers_populated.html">helpers/populated</a></li><li><a href="module-helpers_positiveInt.html">helpers/positiveInt</a></li><li><a href="module-helpers_positiveIntOrZero.html">helpers/positiveIntOrZero</a></li><li><a href="module-helpers_regExpPrice.html">helpers/regExpPrice</a></li><li><a href="module-helpers_sanitizeKey.html">helpers/sanitizeKey</a></li><li><a href="module-helpers_skipTest.html">helpers/skipTest</a></li><li><a href="module-helpers_typeOf.html">helpers/typeOf</a></li><li><a href="module-tests_dbg.html">tests/dbg</a></li><li><a href="module-tests_event2DLVarMap.html">tests/event2DLVarMap</a></li><li><a href="module-tests_fullOrRegExMatchMocha.html">tests/fullOrRegExMatchMocha</a></li><li><a href="module-tests_fullOrRegExMatchTealFunctions.html">tests/fullOrRegExMatchTealFunctions</a></li><li><a href="module-tests_getEvent2DLVarMap.html">tests/getEvent2DLVarMap</a></li><li><a href="module-tests_getEvent2DLVarMap_get.html">tests/getEvent2DLVarMap/get</a></li><li><a href="module-tests_ignoreKeysForPlatform.html">tests/ignoreKeysForPlatform</a></li><li><a href="module-tests_importLibTealFunctions.html">tests/importLibTealFunctions</a></li><li><a href="module-tests_logErrorToGCF.html">tests/logErrorToGCF</a></li><li><a href="module-tests_mergeTestMapsAndFireTests.html">tests/mergeTestMapsAndFireTests</a></li><li><a href="module-tests_mochaChaiExt.html">tests/mochaChaiExt</a></li><li><a href="module-tests_notPopulatedthrow.html">tests/notPopulatedthrow</a></li><li><a href="module-tests_populatedAndOfTypeMocha.html">tests/populatedAndOfTypeMocha</a></li><li><a href="module-tests_populatedAndofTypeTealFunctions.html">tests/populatedAndofTypeTealFunctions</a></li><li><a href="module-tests_runDataLayerTests.html">tests/runDataLayerTests</a></li><li><a href="module-tests_runEventMapTests.html">tests/runEventMapTests</a></li><li><a href="module-tests_sendDataToInfluxDB.html">tests/sendDataToInfluxDB</a></li><li><a href="module-tests_shortPreview.html">tests/shortPreview</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Sun Aug 28 2022 13:44:05 GMT+0200 (Mitteleuropäische Sommerzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.11</a> on Sun Sep 04 2022 10:45:37 GMT+0200 (Mitteleuropäische Sommerzeit)
 </footer>
 
 <script> prettyPrint(); </script>
