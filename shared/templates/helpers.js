@@ -94,13 +94,13 @@ TMSHelper.typeOf = function (e) {
     return ({}).toString.call(e).match(/\s([a-zA-Z]+)/)[1].toLowerCase();
 };
 /**
- * shortPreview: gives a (by default 50-character) short preview of a variable's value, e.g. to not show all 78 array values
+ * shortPreview: gives a (by default 80-character) short preview of a variable's value, e.g. to not show all 78 array values
  * @param {*} val - value to preview
  * @param {number} [len] - how many characters short
  * @module tests/shortPreview
  */
 TMSHelper.shortPreview = function (val, len) {
-    len = len || 50;
+    len = len || 80;
     if (TMSHelper.populated(val)) {
         if (TMSHelper.typeOf(val) === "regexp") {
             val = val.toString();
@@ -173,12 +173,12 @@ TMSHelper.positiveInt = "/^[1-9]\\d*$/";
  */
 TMSHelper.positiveIntOrZero = "/^(zero|[1-9]\\d*)$/";
 /**
- * checks which type of logical test is used and return testMap
+ * checks which type of logical test is used and runs it
  * @param {string} dlvar - dataLayer variable name
  * @param {object} testDef - Object with the logical test definitions e.g. switch definition
  * @param  {object} _dl - dataLayer
  * @param {string} testType - type of test to run (e.g. "fullOrRegexMatch")
- * @returns {*} result of a match/test for the logical test
+ * @returns {Boolean} result of the logical test
  * @module tests/logicalTest
  */
 TMSHelper.logicalTest = function (dlvar, testDef, _dl, testType) {

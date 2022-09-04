@@ -57,7 +57,7 @@ const downloadTestDefinitions = false; // set to true if you want to download yo
     // @formatter:off
 // insert newest shared (between Mocha and Tealium Functions) helper functions via `gulp updateHelpers`
 // Shared TMSHelper functions start
-TMSHelper.ignoreKeysForPlatform={profile1:["variable_that_never_exists_on_profile1"],profile2:["cp.a_cookie_variable_that_never_exists_on_profile2","some_other_variable_that_never_exists_on_profile2"]},TMSHelper.console=function(e,r){var t=!1,t="function"!=typeof TMSHelper.debugActive||TMSHelper.debugActive();(t=r?!0:t)&&console.log(e)},TMSHelper.populated=function(e,r,t){if(!e)return!(!r||0!==e)||!(!t||!1!==e);if(e instanceof Array){if(e.length)for(var n=0,l=e.length;n<l;n++){if(e[n])return!0;if(r&&0===e[n])return!0;if(t&&!1===e[n])return!0}}else if(e)return!0;return!1},TMSHelper.typeOf=function(e){return{}.toString.call(e).match(/\s([a-zA-Z]+)/)[1].toLowerCase()},TMSHelper.shortPreview=function(e,r){if(r=r||50,TMSHelper.populated(e))return e=(e="regexp"===TMSHelper.typeOf(e)?e.toString():JSON.stringify(e)).length>r?e.slice(0,r)+"...":e},TMSHelper.skipTest=function(e,r){if(TMSHelper.ignoreKeysForPlatform[r["ut.profile"]]&&-1!==TMSHelper.ignoreKeysForPlatform[r["ut.profile"]].indexOf(TMSHelper.sanitizeKey(e)))return!0;if(-1===e.search(/^[MT]~/))return!1;r=e.slice(0,2);return TMSHelper.mochaChaiExt?"M~"!==r:"T~"!==r},TMSHelper.sanitizeKey=function(e){return-1===e.search(/^[MT]~/)?e:e.slice(2)},TMSHelper.regExpPrice="/^([1-9]\\d*|0)(\\.\\d{1,2}|)$/",TMSHelper.positiveInt="/^[1-9]\\d*$/",TMSHelper.positiveIntOrZero="/^(zero|[1-9]\\d*)$/",TMSHelper.logicalRegExMatch=function(r,t,e){if(t.hasOwnProperty("switch")){var n=Object.keys(t.switch)[0],t=t.switch[n][e[n]]||t.switch[n].default;if(TMSHelper.mochaChaiExt)return TMSHelper.fullOrRegExMatch(r,t,e);{let e={};return e[r]=t,TMSHelper.fullOrRegExMatch(e)}}TMSHelper.handleError("Unhandled logical test type in TMSHelper.logicalRegExMatch",e,r,"fullOrRegExMatch")},TMSHelper.handleError=function(e,r,t,n){if(TMSHelper.mochaChaiExt)throw Error(e);return error.add(n,t,eventName,e),!1},TMSHelper.functionMatchFunctions={notFallback:function(e,r){var t=e[r];return"fallback"!==(t=t instanceof Array?t[0]:t)||TMSHelper.handleError(r+"is 'fallback'!",e,r,"functionMatch")},validatePageCategory:function(e,r){return!!("Category"!==e.page_type||e[r]&&-1!==e[r].search(/[a-z]+[\-a-z]+/))||TMSHelper.handleError("page_category not defined or false value: "+e[r],e,r,"functionMatch")},ossTermCheck:function(e,r){return TMSHelper.getParameterByName("query",e.url_search)?!!e[r]||TMSHelper.handleError("Search Term ("+r+") not set!",e,r,"functionMatch"):"*"===e[r]||TMSHelper.handleError("Search Term ("+r+") should be *, but is "+e[r],e,r,"functionMatch")}};var short=TMSHelper.shortPreview;
+TMSHelper.ignoreKeysForPlatform={profile1:["variable_that_never_exists_on_profile1"],profile2:["cp.a_cookie_variable_that_never_exists_on_profile2","some_other_variable_that_never_exists_on_profile2"]},TMSHelper.console=function(e,r){var t=!1,t="function"!=typeof TMSHelper.debugActive||TMSHelper.debugActive();(t=r?!0:t)&&console.log(e)},TMSHelper.populated=function(e,r,t){if(!e)return!(!r||0!==e)||!(!t||!1!==e);if(e instanceof Array){if(e.length)for(var n=0,o=e.length;n<o;n++){if(e[n])return!0;if(r&&0===e[n])return!0;if(t&&!1===e[n])return!0}}else if(e)return!0;return!1},TMSHelper.typeOf=function(e){return{}.toString.call(e).match(/\s([a-zA-Z]+)/)[1].toLowerCase()},TMSHelper.shortPreview=function(e,r){if(r=r||80,TMSHelper.populated(e))return e=(e="regexp"===TMSHelper.typeOf(e)?e.toString():JSON.stringify(e)).length>r?e.slice(0,r)+"...":e},TMSHelper.skipTest=function(e,r){if(TMSHelper.ignoreKeysForPlatform[r["ut.profile"]]&&-1!==TMSHelper.ignoreKeysForPlatform[r["ut.profile"]].indexOf(TMSHelper.sanitizeKey(e)))return!0;if(-1===e.search(/^[MT]~/))return!1;r=e.slice(0,2);return TMSHelper.mochaChaiExt?"M~"!==r:"T~"!==r},TMSHelper.sanitizeKey=function(e){return-1===e.search(/^[MT]~/)?e:e.slice(2)},TMSHelper.regExpPrice="/^([1-9]\\d*|0)(\\.\\d{1,2}|)$/",TMSHelper.positiveInt="/^[1-9]\\d*$/",TMSHelper.positiveIntOrZero="/^(zero|[1-9]\\d*)$/",TMSHelper.logicalTest=function(r,t,e,n){if(t.hasOwnProperty("switch")){var o=Object.keys(t.switch)[0],t=t.switch[o][e[o]]||t.switch[o].default;if(TMSHelper.mochaChaiExt)return TMSHelper[n](r,t,e);{let e={};return e[r]=t,TMSHelper[n](e)}}TMSHelper.handleError("Unhandled logical test type",e,r,n)},TMSHelper.handleError=function(e,r,t,n){if(TMSHelper.mochaChaiExt)throw Error(e);return error.add(n,t,eventName,e),!1},TMSHelper.functionMatchFunctions={notFallback:function(e,r){var t=e[r];return"fallback"!==(t=t instanceof Array?t[0]:t)||TMSHelper.handleError(r+"is 'fallback'!",e,r,"functionMatch")},validatePageCategory:function(e,r){return!!("Category"!==e.page_type||e[r]&&-1!==e[r].search(/[a-z]+[\-a-z]+/))||TMSHelper.handleError("page_category not defined or false value: "+e[r],e,r,"functionMatch")},ossTermCheck:function(e,r){return TMSHelper.getParameterByName("query",e.url_search)?!!e[r]||TMSHelper.handleError("Search Term ("+r+") not set!",e,r,"functionMatch"):"*"===e[r]||TMSHelper.handleError("Search Term ("+r+") should be *, but is "+e[r],e,r,"functionMatch")}};var short=TMSHelper.shortPreview;
 // Shared TMSHelper functions end
     // @formatter:on
 
@@ -156,10 +156,17 @@ TMSHelper.ignoreKeysForPlatform={profile1:["variable_that_never_exists_on_profil
         }
     };
 
-    /**
-     * Checks if variable is populated and as has correct type
-     * @param {Object} testMap
-     * @returns {String} - passed Tests
+     /**
+     * populatedAndOfType: checks if a data layer property is populated and of type (according to utag.ut.typeOf logic: "regexp, string, object, number, boolean").
+     *
+     * Special commands:
+     * <pre>
+     *  - preceding "**", e.g. "**string" -> optionally populated, but if populated, should be of type
+     *  - "!!" -> must not be populated -> throws error if populated
+     *  </pre>
+     * @param {object} testMap
+     * @returns {string} - passed tests
+     * @module tests/populatedAndofTypeTealFunctions
      */
     TMSHelper.populatedAndOfType = function (testMap) {
         for (let key in testMap) {
@@ -168,7 +175,7 @@ TMSHelper.ignoreKeysForPlatform={profile1:["variable_that_never_exists_on_profil
             }
             if (TMSHelper.typeOf(testMap[key]) === "object") {
                 // if the test definition is an object, it must be a logical test (eg switch)
-                TMSHelper.logicalTest(key, testMap[key], eventData,"populatedAndOfType");
+                TMSHelper.logicalTest(key, testMap[key], eventData, "populatedAndOfType");
                 continue;
             }
             // key = unsanitized key from testmap, e.g. "T~prod_id"
@@ -306,12 +313,12 @@ TMSHelper.ignoreKeysForPlatform={profile1:["variable_that_never_exists_on_profil
         });
         console.log("Logged error to Cloud Function. Status Response:", response.status, response.statusText);
     };
-    // @formatter:off
 
     /**
-     * checks if variable matches regex
+     * fullOrRegExMatch: checks a variable value v against c (a "string" = full match, a "/regexstr/" = regexp match)
+     * if value to check is an object, a logical test is run (similar to populatedAndOfType)
      * @param {object} testMap
-     * @module tests/fullOrRegExMatch
+     * @module tests/fullOrRegExMatchTealFunctions
      */
     TMSHelper.fullOrRegExMatch = function (testMap) {
         for (let key in testMap) {
@@ -320,13 +327,13 @@ TMSHelper.ignoreKeysForPlatform={profile1:["variable_that_never_exists_on_profil
             }
             if (TMSHelper.typeOf(testMap[key]) === "object") {
                 // if the test definition is an object, it must be a logical test (eg switch)
-                TMSHelper.logicalTest(key, testMap[key], eventData,"fullOrRegExMatch");
+                TMSHelper.logicalTest(key, testMap[key], eventData, "fullOrRegExMatch");
                 continue;
             }
             // key = unsanitized key from testmap, e.g. "T~prod_id"
             var keySan = TMSHelper.sanitizeKey(key); // keySan = sanitized key, e.g. "prod_id"
             var val = eventData[keySan]; // val = data layer value
-            if (!TMSHelper.populated(val)) {
+            if (!TMSHelper.populated(val, true, true)) {
                 continue; // if not populated, go to next var
             }
             if (TMSHelper.typeOf(val) !== "array") {
@@ -349,14 +356,17 @@ TMSHelper.ignoreKeysForPlatform={profile1:["variable_that_never_exists_on_profil
                 theTest = new RegExp("^" + theTest + "$"); // add ^ and $ to make it an "equals"
             }
             for (let i = 0; i < val.length; i++) {
-                var val_i = val[i].toString(); // setting to string to allow re searches
+                let val_i = val[i];
+                if (TMSHelper.populated(val_i, true, true)) {
+                    val_i = val[i].toString(); // setting to string to allow re searches
 
-                if (val_i.search(theTest) !== -1) {
-                    checkResponse = key + " --> Full or Regex Match OK: " + theTest.toString() + " matched " + val_i;
-                    test.add("fullOrRegExMatch", key, checkResponse);
-                } else {
-                    errorMessage = key + " --> Full or Regex Match failed: Searched for --> " + short(theTest) + ", but found --> " + short(val_i) + "\n";
-                    error.add("fullOrRegExMatch", key, eventName, errorMessage);
+                    if (val_i.search(theTest) !== -1) {
+                        checkResponse = key + " --> Full or Regex Match OK: " + theTest.toString() + " matched " + val_i;
+                        test.add("fullOrRegExMatch", key, checkResponse);
+                    } else {
+                        errorMessage = key + " --> Full or Regex Match failed: Searched for --> " + short(theTest) + ", but found --> " + short(val_i) + "\n";
+                        error.add("fullOrRegExMatch", key, eventName, errorMessage);
+                    }
                 }
             }
             testFinishedCounter++;
