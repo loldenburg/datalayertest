@@ -1,7 +1,6 @@
 {
   "fullOrRegExMatch": {
     "prod_id": "/^[1-9]\\d+$/",
-    "firstProd_id": "/^[1-9]\\d+$/",
     "prod_pos": "/^[1-9]\\d*$/",
     "prod_posTotal": "/^[1-9]\\d*$/",
     "prod_quan": "//positiveInt",

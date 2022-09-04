@@ -17,10 +17,6 @@ TMSHelper.event2DLVarMap = {
     "timing_server": "/^\\d+$/",
     "timing_load": "/^\\d+$/",
     "timing_dom": "/^\\d+$/",
-    "timing_deltaToUtagInit": "/^(-1|\\d+)$/",
-    "sugg_version_env": "/^.*\\d.*::[a-z]$/",
-    "sugg_version": "/^.*\\d$/",
-    "sugg_env": "/^[a-z]$/",
     "server_code": "/^\\d{3}$/",
     "referrer_full": "/^(https?|android-app):.*/",
     "order_currency": "CHF",
@@ -76,7 +72,6 @@ TMSHelper.event2DLVarMap = {
 ,"allProdEventsRegexSchema": {
   "fullOrRegExMatch": {
     "prod_id": "/^[1-9]\\d+$/",
-    "firstProd_id": "/^[1-9]\\d+$/",
     "prod_pos": "/^[1-9]\\d*$/",
     "prod_posTotal": "/^[1-9]\\d*$/",
     "prod_quan": "//positiveInt",
@@ -103,6 +98,7 @@ TMSHelper.event2DLVarMap = {
     "prod_cat_l5": "**array",
     "prod_cat_wg": "array",
     "prod_id": "array",
+    "firstProd_id": "string",
     "prod_price": "array",
     "prod_stock": "array",
     "prod_purchasable": "array",
