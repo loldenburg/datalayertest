@@ -272,4 +272,4 @@ TMSHelper.functionMatchFunctions = {
     }
     //, next function
 };
-var short = TMSHelper.shortPreview;
+const short = TMSHelper.shortPreview;
