@@ -484,7 +484,10 @@ TMSHelper.ignoreKeysForPlatform={profile1:["variable_that_never_exists_on_profil
 
     // log the passed tests
     if (typeof errorMessage !== "undefined" && errorMessage !== "") {
-        console.log("Failed Tests:");
+        let msg = (Object.keys(error.data).length.toString() + " Tests failed");
+        console.error(msg); // console.error is needed to make the Tealium test output red and not green (however
+        // Tealium puts this to the very end of the console output, so we continue the rest with normal console.log)
+        console.log(msg);
         dbg(JSON.stringify(error.data, null, 4));
         for (let key in error.data) {
             if (error.data[key].length) {
