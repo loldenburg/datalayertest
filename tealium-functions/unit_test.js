@@ -294,7 +294,6 @@ TMSHelper.ignoreKeysForPlatform={profile1:["variable_that_never_exists_on_profil
             eventName: eventName // actually tested event name
         });
         let body = JSON.stringify({
-            topic: "XXX",
             token: tokenGCF,
             eventPayload: ep,
             attrs: {
