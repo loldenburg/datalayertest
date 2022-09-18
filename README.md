@@ -1,5 +1,14 @@
 # Tealium Client-and-Server-Side Data Layer Testing Framework
 
+# Meta
+This is the repository with the Tealium iQ- & Tealium CDP-related code for the client-and-server-side data layer testing
+framework presented in this article series:
+ * https://thebounce.io/the-issues-of-tracking-qa-solutions-and-what-a-better-one-could-look-like-a883ed527b1
+ * https://thebounce.io/using-mocha-chai-js-tealium-for-client-side-data-layer-testing-9eea7807942a
+ * https://thebounce.io/use-your-server-side-tms-to-qa-your-data-collection-in-the-real-world-7137376ca9a9
+
+For the Python code and step-by-step guide to set up the **Google Cloud Platform** part of the framework, see https://github.com/loldenburg/datalayertests-gcp
+
 ## Summary
 
 This framework validates Tealium Data Layer Events via ...
