@@ -336,13 +336,13 @@ try {
                     if (!TMSHelper.mochaChaiBrewingStarted) {
                         // Config Vars
                         TMSHelper.mochaChaiBrewingStarted = true;
-                        TMSHelper.console("Loading mocha + chai libs, get your cup ready!", 1);
+                        console.log("Loading mocha + chai libs, get your cup ready!", 1);
                         if (typeof window.require !== "function") { // sites with requirejs will not load mocha and chai the old-fashioned way
                             u.loader({
                                 "type": "script",
                                 "src": chaiJSFile,
                                 "cb": function () {
-                                    TMSHelper.console("chai loaded, now loading mocha", 1);
+                                    console.log("chai loaded, now loading mocha");
                                     window.chai = chai; // put chai in window scope
                                     u.loader({
                                         "type": "script",
@@ -358,12 +358,12 @@ try {
                         } else { // sites with requirejs
                             require([chaiJSFile], function (chai) {
                                 window.chai = chai; // put chai in window scope
-                                TMSHelper.console("chai loaded, now loading mocha", 1);
+                                console.log("chai loaded, now loading mocha");
                                 require([mochaJSFile], u.loader_cb);
                             });
                         }
                     } else {
-                        // refresh mocha cache to allow multiple runs on same page
+                        // Mocha was already loaded on this page? => refresh mocha cache to allow multiple runs on same page
                         mocha.unloadFiles();
                         u.loader_cb();
                     }
