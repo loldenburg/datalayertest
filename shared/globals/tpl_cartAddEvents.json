@@ -3,6 +3,7 @@
         "populatedAndOfType": {
             "prod_quan": "array",
             "order_id": "!!",
+            "prod_list": "!!",
             "persistPageContext": "string",
             "prod_actionIsCartAdd": "string",
             "cart_content": "**object",
