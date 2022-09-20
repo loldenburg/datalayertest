@@ -445,8 +445,7 @@ TMSHelper.ignoreKeysForPlatform={profile1:["variable_that_never_exists_on_profil
         }
     }
     eventSchemaArray = [mergedSchema];
-    dbg("Converting some string variables back to arrays");
-    TMSHelper.convertToArrays();
+
     // --- Run the tests! ---
     dbg("Starting tests");
     for (var i = 0; i < eventSchemaArray.length; i++) {
