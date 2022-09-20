@@ -70,6 +70,7 @@ function generateEventMap(cb) {
 function updateTealiumFunctionsMap(cb) {
     console.log("Importing eventMap from eventMap.min.js into unit_test.js");
     let eventMap = fs.readFileSync("shared/templates/eventMap.min.js", "utf8");
+    eventMap = eventMap.replace(/window\.TMSHelper=window\.TMSHelper\|\|\{},/, ""); // there is no window context in Tealium Function
     let tealFunction = fs.readFileSync("tealium-functions/unit_test.js", "utf8");
     tealFunction = tealFunction.replace(/TMSHelper.event2DLVarMap *=.*};/, eventMap);
     fs.writeFileSync("tealium-functions/unit_test.js", tealFunction);

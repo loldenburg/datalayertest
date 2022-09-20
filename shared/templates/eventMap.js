@@ -123,6 +123,20 @@ window.TMSHelper = window.TMSHelper || {}; TMSHelper.event2DLVarMap = {
         }
     }
 }
+,"link__ecommerce__add_list": {
+    "import": ["tpl_cartAddEvents"],
+    "eventSchema": {
+        "populatedAndOfType": {
+            "prod_list": "array",
+            "prod_purchasableHasService": "array"
+        },
+        "fullOrRegExMatch": {
+            "prod_action": "add_list",
+            "component_category": "ecommerce",
+            "component_subcategory": "add_list"
+        }
+    }
+}
 ,"link__ecommerce__add_pdp": {
     "import": ["tpl_cartAddEvents"],
     "eventSchema": {
@@ -156,6 +170,7 @@ window.TMSHelper = window.TMSHelper || {}; TMSHelper.event2DLVarMap = {
         "populatedAndOfType": {
             "prod_quan": "array",
             "order_id": "!!",
+            "prod_list": "!!",
             "persistPageContext": "string",
             "prod_actionIsCartAdd": "string",
             "cart_content": "**object",
