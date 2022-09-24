@@ -22,3 +22,8 @@ for (let i = 0; i < TMSHelper.mochaChaiBlackListEvents.length; i++) {
         break;
     }
 }
+
+// todo if this Extension is an "After Load Rules Extension" (which it probably should be in most cases), uncomment the
+//  following line to re-evaluate load rules after this Extension has run (otherwise, your mocha tag will not fire if
+//  its load rule is bound to the tool_mochaTestFlag variable)
+// utag.handler.LR(b);
