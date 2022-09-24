@@ -4,7 +4,7 @@ import {event, store} from "tealium";
 // WHEN TEST CHANGES DEPEND ON NEWEST DATA LAYER VERSION, CHANGE THIS SO NO OLDER TEALIUM VERSIONS ARE TESTED:
 const minimumTealiumVersion = 202207270820;
 
-var dbgActive = !event.data.udo; // if event.data.udo doesn't exist, set dbg to true
+let dbgActive = !event.data.udo; // if event.data.udo doesn't exist, set dbg to true
 
 /**
  * console output if dbgActive is true (set at start of script)
@@ -19,12 +19,10 @@ const dbg = function (message) {
 const downloadTestDefinitions = false; // set to true if you want to download your test definitions from your host of choice (e.g. Google Cloud Storage)
 
 (async () => {
-    var eventData = event.data.udo || event.data;
-    var eventSchemaArray = []; // placeholder for all schemas for tested actions e.g. user/page/job/account
-    var errorMessage, checkResponse;
-    var eventName = eventData.event_name;
-    var testCounter = 0;
-    var testFinishedCounter = 0;
+    let eventData = event.data.udo || event.data;
+    let eventSchemaArray = [], // placeholder for all schemas for tested actions e.g. user/page/job/account
+        errorMessage, checkResponse,
+        eventName = eventData.event_name;
 
     // copy event.data.firstparty_tealium_cookies data to eventData object and add cp. before this keys so that the variables have the same name as in client-side tests
     if (event.data.firstparty_tealium_cookies) {
@@ -35,7 +33,6 @@ const downloadTestDefinitions = false; // set to true if you want to download yo
 
     console.log("eventName: " + eventName);
     console.log("-------------------------------------");
-
     // check if Event is from a newer version of Tealium than the minimum version
     const tealVersionDate = parseInt(eventData["ut.version"].split(".")[2]); // e.g. ut4.48.202207270826
     if (tealVersionDate < minimumTealiumVersion) {
@@ -54,47 +51,45 @@ const downloadTestDefinitions = false; // set to true if you want to download yo
         return;
     }
 
-    var TMSHelper = {};
+    let TMSHelper = {};
     // @formatter:off
 // insert newest shared (between Mocha and Tealium Functions) helper functions via `gulp updateHelpers`
 // Shared TMSHelper functions start
-TMSHelper.ignoreKeysForPlatform={profile1:["variable_that_never_exists_on_profile1"],profile2:["cp.a_cookie_variable_that_never_exists_on_profile2","some_other_variable_that_never_exists_on_profile2"]},TMSHelper.console=function(e,r){var t=!1,t="function"!=typeof TMSHelper.debugActive||TMSHelper.debugActive();(t=r?!0:t)&&console.log(e)},TMSHelper.populated=function(e,r,t){if(!e)return!(!r||0!==e)||!(!t||!1!==e);if(e instanceof Array){if(e.length)for(var n=0,o=e.length;n<o;n++){if(e[n])return!0;if(r&&0===e[n])return!0;if(t&&!1===e[n])return!0}}else if(e)return!0;return!1},TMSHelper.typeOf=function(e){return{}.toString.call(e).match(/\s([a-zA-Z]+)/)[1].toLowerCase()},TMSHelper.shortPreview=function(e,r){if(r=r||80,TMSHelper.populated(e))return e=(e="regexp"===TMSHelper.typeOf(e)?e.toString():JSON.stringify(e)).length>r?e.slice(0,r)+"...":e},TMSHelper.skipTest=function(e,r){if(TMSHelper.ignoreKeysForPlatform[r["ut.profile"]]&&-1!==TMSHelper.ignoreKeysForPlatform[r["ut.profile"]].indexOf(TMSHelper.sanitizeKey(e)))return!0;if(-1===e.search(/^[MT]~/))return!1;r=e.slice(0,2);return TMSHelper.mochaChaiExt?"M~"!==r:"T~"!==r},TMSHelper.sanitizeKey=function(e){return-1===e.search(/^[MT]~/)?e:e.slice(2)},TMSHelper.regExpPrice="/^([1-9]\\d*|0)(\\.\\d{1,2}|)$/",TMSHelper.positiveInt="/^[1-9]\\d*$/",TMSHelper.positiveIntOrZero="/^(zero|[1-9]\\d*)$/",TMSHelper.logicalTest=function(r,t,e,n){if(t.hasOwnProperty("switch")){var o=Object.keys(t.switch)[0],t=t.switch[o][e[o]]||t.switch[o].default;if(TMSHelper.mochaChaiExt)return TMSHelper[n](r,t,e);{let e={};return e[r]=t,TMSHelper[n](e)}}TMSHelper.handleError("Unhandled logical test type",e,r,n)},TMSHelper.handleError=function(e,r,t,n){if(TMSHelper.mochaChaiExt)throw Error(e);return error.add(n,t,eventName,e),!1},TMSHelper.functionMatchFunctions={notFallback:function(e,r){var t=e[r];return"fallback"!==(t=t instanceof Array?t[0]:t)||TMSHelper.handleError(r+"is 'fallback'!",e,r,"functionMatch")},validatePageCategory:function(e,r){return!!("Category"!==e.page_type||e[r]&&-1!==e[r].search(/[a-z]+[\-a-z]+/))||TMSHelper.handleError("page_category not defined or false value: "+e[r],e,r,"functionMatch")},ossTermCheck:function(e,r){return TMSHelper.getParameterByName("query",e.url_search)?!!e[r]||TMSHelper.handleError("Search Term ("+r+") not set!",e,r,"functionMatch"):"*"===e[r]||TMSHelper.handleError("Search Term ("+r+") should be *, but is "+e[r],e,r,"functionMatch")}};const short=TMSHelper.shortPreview;
+TMSHelper.ignoreKeysForPlatform={profile1:["variable_that_never_exists_on_profile1"],profile2:["cp.a_cookie_variable_that_never_exists_on_profile2","some_other_variable_that_never_exists_on_profile2"]},TMSHelper.console=function(e,r){var t=!1,t="function"!=typeof TMSHelper.debugActive||TMSHelper.debugActive();(t=r?!0:t)&&console.log(e)},TMSHelper.populated=function(e,r,t){if(!e)return!(!r||0!==e)||!(!t||!1!==e);if(e instanceof Array){if(e.length)for(var n=0,o=e.length;n<o;n++){if(e[n])return!0;if(r&&0===e[n])return!0;if(t&&!1===e[n])return!0}}else if(e)return!0;return!1},TMSHelper.typeOf=function(e){return{}.toString.call(e).match(/\s([a-zA-Z]+)/)[1].toLowerCase()},TMSHelper.shortPreview=function(e,r){if(r=r||80,TMSHelper.populated(e))return e=(e="regexp"===TMSHelper.typeOf(e)?e.toString():JSON.stringify(e)).length>r?e.slice(0,r)+"...":e},TMSHelper.skipTest=function(e,r){if(TMSHelper.ignoreKeysForPlatform[r["ut.profile"]]&&-1!==TMSHelper.ignoreKeysForPlatform[r["ut.profile"]].indexOf(TMSHelper.sanitizeKey(e)))return!0;if(-1===e.search(/^[MT]~/))return!1;r=e.slice(0,2);return TMSHelper.mochaChaiExt?"M~"!==r:"T~"!==r},TMSHelper.sanitizeKey=function(e){return-1===e.search(/^[MT]~/)?e:e.slice(2)},TMSHelper.regExpPrice="/^([1-9]\\d*|0)(\\.\\d{1,2}|)$/",TMSHelper.positiveInt="/^[1-9]\\d*$/",TMSHelper.positiveIntOrZero="/^(zero|[1-9]\\d*)$/",TMSHelper.logicalTest=function(r,t,e,n){if(t.hasOwnProperty("switch")){var o=Object.keys(t.switch)[0],t=t.switch[o][e[o]]||t.switch[o].default;if(TMSHelper.mochaChaiExt)return TMSHelper[n](r,t,e);{let e={};return e[r]=t,TMSHelper[n](e)}}TMSHelper.handleError("Unhandled logical test type",e,r,n)},TMSHelper.handleError=function(e,r,t,n){if(TMSHelper.mochaChaiExt)throw Error(e);return errorLog.add(n,t,eventName,e),!1},TMSHelper.functionMatchFunctions={notFallback:function(e,r){var t=e[r];return"fallback"!==(t=t instanceof Array?t[0]:t)||TMSHelper.handleError(r+"is 'fallback'!",e,r,"functionMatch")},validatePageCategory:function(e,r){return!!("Category"!==e.page_type||e[r]&&-1!==e[r].search(/[a-z]+[\-a-z]+/))||TMSHelper.handleError("page_category not defined or false value: "+e[r],e,r,"functionMatch")},ossTermCheck:function(e,r){return TMSHelper.getParameterByName("query",e.url_search)?!!e[r]||TMSHelper.handleError("Search Term ("+r+") not set!",e,r,"functionMatch"):"*"===e[r]||TMSHelper.handleError("Search Term ("+r+") should be *, but is "+e[r],e,r,"functionMatch")}};const short=TMSHelper.shortPreview;
 // Shared TMSHelper functions end
     // @formatter:on
 
     // Test Log
-    var test = {data: {}};
+    let testLog = {data: {}};
     /**
-     * Adds test results to the test.data object
+     * Adds test results to the testLog.data object
      * @param testType
      * @param variable
      * @param testResult
      */
-    test.add = function (testType, variable, testResult) {
-        if (test.data[testType]) {
-            test.data[testType].push({var: variable, result: testResult});
-        } else {
-            test.data[testType] = [];
-            test.data[testType].push({var: variable, result: testResult});
+    testLog.add = function (testType, variable, testResult) {
+        if (!testLog.data[testType]) {
+            testLog.data[testType] = [];
         }
+        testLog.data[testType].push({var: variable, result: testResult});
+        dbg("Added test result to testLog: " + testType + " - " + variable + " - " + testResult);
     };
 
-    // Error Obj
-    var error = {data: {}};
+    // Error Log
+    let errorLog = {data: {}};
     /**
-     * Adds Errors Log to the Error Object
+     * Adds Error to the errorLog.data object
      * @param testType
      * @param variable
      * @param eventName
      * @param message
      */
-    error.add = function (testType, variable, eventName, message) {
-        if (error.data.testType) {
-            error.data[testType].push({var: variable, event: eventName, message: message});
-        } else {
-            error.data[testType] = [];
-            error.data[testType].push({var: variable, event: eventName, message: message});
+    errorLog.add = function (testType, variable, eventName, message) {
+        if (!errorLog.data[testType]) {
+            errorLog.data[testType] = [];
         }
+        errorLog.data[testType].push({var: variable, event: eventName, message: message});
+        dbg("Added error to errorLog: " + testType + " - " + variable + " - " + eventName + " - " + message);
     };
 
     /**
@@ -148,8 +143,8 @@ TMSHelper.ignoreKeysForPlatform={profile1:["variable_that_never_exists_on_profil
     TMSHelper.getParameterByName = function (name, str) {
         try {
             name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-            var s = str || ""; // || location.search; -> location.search only for in-browser tests
-            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+            let s = str || ""; // || location.search; -> location.search only for in-browser tests
+            let regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
                 results = regex.exec(s);
             return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
         } catch (e) {
@@ -171,7 +166,9 @@ TMSHelper.ignoreKeysForPlatform={profile1:["variable_that_never_exists_on_profil
      */
     TMSHelper.populatedAndOfType = function (testMap) {
         for (let key in testMap) {
+            dbg("populatedAndOfType test for key: " + key);
             if (TMSHelper.skipTest(key, eventData)) {
+                dbg("Skipping key "+key+" because it is in the skip list");
                 continue;
             }
             if (TMSHelper.typeOf(testMap[key]) === "object") {
@@ -180,13 +177,12 @@ TMSHelper.ignoreKeysForPlatform={profile1:["variable_that_never_exists_on_profil
                 continue;
             }
             // key = unsanitized key from testmap, e.g. "T~prod_id"
-            var keySan = TMSHelper.sanitizeKey(key); // keySan = sanitized key, e.g. "prod_id"
-            var val = eventData[keySan]; // val = data layer value
-            var theTest = testMap[key]; // theTest = the test definition (e.g. "**string")
-            var testPrefix = theTest.slice(0, 2); // prefix e.g. "**"
-            testFinishedCounter++; // has to come up here already due to various "continue" statements further down // TODO improve this so Finished is not counted unless a real test has been made
+            let keySan = TMSHelper.sanitizeKey(key); // keySan = sanitized key, e.g. "prod_id"
+            let val = eventData[keySan]; // val = data layer value
+            let theTest = testMap[key]; // theTest = the test definition (e.g. "**string")
+            let testPrefix = theTest.slice(0, 2); // prefix e.g. "**"
 
-            var typeOfResult = TMSHelper.typeOf(val);
+            let typeOfResult = TMSHelper.typeOf(val);
 
             // not populated (value = "!!")
 
@@ -195,17 +191,17 @@ TMSHelper.ignoreKeysForPlatform={profile1:["variable_that_never_exists_on_profil
                 continue;
             } else if (testPrefix === "**") {
                 // optionally populated (**type)
-                var testSan = theTest.slice(2); // the value after the prefix, e.g. "string")
+                let testSan = theTest.slice(2); // the value after the prefix, e.g. "string")
                 // if populated and correct type => ok
                 if (TMSHelper.populated(val) && typeOfResult === testSan) {
                     checkResponse = key + " --> Correct type: " + typeOfResult + " -> " + testSan;
-                    test.add("populatedAndOfType", key, checkResponse);
+                    testLog.add("populatedAndOfType", key, checkResponse);
                     continue;
                 }
                 // if not populated => always ok (because optional)
                 if (!TMSHelper.populated(val)) {
                     checkResponse = key + " --> Correct type: optionally populated";
-                    test.add("populatedAndOfType", key, checkResponse);
+                    testLog.add("populatedAndOfType", key, checkResponse);
                     continue;
                 }
             }
@@ -213,10 +209,10 @@ TMSHelper.ignoreKeysForPlatform={profile1:["variable_that_never_exists_on_profil
             // is populated and key as defined => OK
             if (TMSHelper.populated(eventData[key]) && typeOfResult === theTest) {
                 checkResponse = key + " --> Correct type: " + typeOfResult + " -> " + theTest;
-                test.add("populatedAndOfType", key, checkResponse);
+                testLog.add("populatedAndOfType", key, checkResponse);
             } else {
                 errorMessage = keySan + " does not exist or is not populated or is not of type " + theTest + "!";
-                error.add("populatedAndOfType", key, eventName, errorMessage);
+                errorLog.add("populatedAndOfType", key, eventName, errorMessage);
             }
         }
     };
@@ -227,12 +223,11 @@ TMSHelper.ignoreKeysForPlatform={profile1:["variable_that_never_exists_on_profil
     TMSHelper.notPopulated = function (dlkey) {
         if (TMSHelper.populated(eventData[dlkey])) {
             errorMessage = dlkey + ' --> is populated: Expected not populated, but found ---> "' + short(eventData[dlkey]) + '"\n';
-            error.add("notPopulated", dlkey, eventName, errorMessage);
+            errorLog.add("notPopulated", dlkey, eventName, errorMessage);
         } else {
             checkResponse = dlkey + " --> Not populated - OK";
-            test.add("notPopulated", dlkey, checkResponse);
+            testLog.add("notPopulated", dlkey, checkResponse);
         }
-        testFinishedCounter++;
     };
 
     /**
@@ -242,7 +237,7 @@ TMSHelper.ignoreKeysForPlatform={profile1:["variable_that_never_exists_on_profil
      */
     TMSHelper.importLib = function (libNames) {
         for (let i = 0; i < libNames.length; i++) {
-            var lib = TMSHelper.event2DLVarMap.get(libNames[i]);
+            let lib = TMSHelper.event2DLVarMap.get(libNames[i]);
             if (lib.hasOwnProperty("import")) {
                 TMSHelper.importLib(lib.import); // import other event libraries
             } else if (lib.hasOwnProperty("eventSchema")) {
@@ -261,8 +256,8 @@ TMSHelper.ignoreKeysForPlatform={profile1:["variable_that_never_exists_on_profil
      */
     TMSHelper.sendDataToInfluxDB = async function (data) {
         // send error to influxdb
-        var tokens = JSON.parse(store.get("tokens"));
-        var url = "https://eu-central-1-1.aws.cloud2.influxdata.com/api/v2/write?org=xxx&bucket=xxx&precision=ms";
+        let tokens = JSON.parse(store.get("tokens"));
+        let url = "https://eu-central-1-1.aws.cloud2.influxdata.com/api/v2/write?org=xxx&bucket=xxx&precision=ms";
         const response = await fetch(url, {
             method: "POST",
             headers: {
@@ -277,14 +272,14 @@ TMSHelper.ignoreKeysForPlatform={profile1:["variable_that_never_exists_on_profil
 
     /**
      * logs error to google cloud function
-     * @param {object} errorData - the error data to log (usually error.data)
+     * @param {object} errorData - the error data to log (usually errorLog.data)
      * @returns {Promise<void>}
      * @module tests/logErrorToGCF
      */
     TMSHelper.logErrorToGCF = async function (errorData) {
         console.log("Logging error to Cloud Function");
-        let tokenGCF = store.get("tokenGCF");
-        let urlGCF = store.get("urlGCF");
+        const tokenGCF = store.get("tokenGCF");
+        const urlGCF = store.get("urlGCF");
         // eventPayload needs to be JSON-stringified additionally
         let ep = JSON.stringify({
             script: "log_datalayer_error",
@@ -300,8 +295,8 @@ TMSHelper.ignoreKeysForPlatform={profile1:["variable_that_never_exists_on_profil
                 origin: "tealium function"
             }
         });
-        dbg("GCF Payload:");
-        dbg(body);
+        //dbg("GCF Payload:");
+        //dbg(body);
         let headers = {
             "content-type": "application/json",
             "mute-http-exceptions": "true"
@@ -331,8 +326,8 @@ TMSHelper.ignoreKeysForPlatform={profile1:["variable_that_never_exists_on_profil
                 continue;
             }
             // key = unsanitized key from testmap, e.g. "T~prod_id"
-            var keySan = TMSHelper.sanitizeKey(key); // keySan = sanitized key, e.g. "prod_id"
-            var val = eventData[keySan]; // val = data layer value
+            let keySan = TMSHelper.sanitizeKey(key); // keySan = sanitized key, e.g. "prod_id"
+            let val = eventData[keySan]; // val = data layer value
             if (!TMSHelper.populated(val, true, true)) {
                 continue; // if not populated, go to next var
             }
@@ -362,14 +357,13 @@ TMSHelper.ignoreKeysForPlatform={profile1:["variable_that_never_exists_on_profil
 
                     if (val_i.search(theTest) !== -1) {
                         checkResponse = key + " --> Full or Regex Match OK: " + theTest.toString() + " matched " + val_i;
-                        test.add("fullOrRegExMatch", key, checkResponse);
+                        testLog.add("fullOrRegExMatch", key, checkResponse);
                     } else {
                         errorMessage = key + " --> Full or Regex Match failed: Searched for --> " + short(theTest) + ", but found --> " + short(val_i) + "\n";
-                        error.add("fullOrRegExMatch", key, eventName, errorMessage);
+                        errorLog.add("fullOrRegExMatch", key, eventName, errorMessage);
                     }
                 }
             }
-            testFinishedCounter++;
         }
     };
 
@@ -383,15 +377,14 @@ TMSHelper.ignoreKeysForPlatform={profile1:["variable_that_never_exists_on_profil
                 continue;
             }
             // key = unsanitized key from testmap, e.g. "T~prod_id"
-            var keySan = TMSHelper.sanitizeKey(key); // keySan = sanitized key, e.g. "prod_id"
-            var val = eventData[keySan]; // val = data layer value
+            let keySan = TMSHelper.sanitizeKey(key); // keySan = sanitized key, e.g. "prod_id"
+            let val = eventData[keySan]; // val = data layer value
             if (testMap.hasOwnProperty(key) && TMSHelper.populated(val)) {
-                var theFunction = testMap[key];
+                let theFunction = testMap[key];
                 if (TMSHelper.functionMatchFunctions[theFunction](eventData, keySan)) {
                     checkResponse = key + " --> Function Match OK: " + theFunction + " -> " + short(val);
-                    test.add("functionMatch", key, checkResponse);
+                    testLog.add("functionMatch", key, checkResponse);
                 }
-                testFinishedCounter++;
             }
         }
     };
@@ -407,7 +400,7 @@ TMSHelper.ignoreKeysForPlatform={profile1:["variable_that_never_exists_on_profil
     }
 
     if (typeof TMSHelper.event2DLVarMap.get(eventName) !== "undefined") {
-        var testSchema = TMSHelper.event2DLVarMap.get(eventName);
+        let testSchema = TMSHelper.event2DLVarMap.get(eventName);
 
         if (testSchema.hasOwnProperty("import")) {
             TMSHelper.importLib(testSchema["import"]);
@@ -416,19 +409,19 @@ TMSHelper.ignoreKeysForPlatform={profile1:["variable_that_never_exists_on_profil
             eventSchemaArray.push(testSchema.eventSchema);
         }
     } else {
-        var noTestDefined = "There is no Event-based Test for: " + eventName;
+        let noTestDefined = "There is no Event-based Test for: " + eventName;
         console.log("No Test Definition: " + noTestDefined);
     }
 
     //merge duplicate schema keys into one object, going through them by order of importing. The last schema (=usually the Event Schema) wins
     dbg("Merging Schemas");
-    var mergedSchema = {};
+    let mergedSchema = {};
     for (let i = 0; i < eventSchemaArray.length; i++) {
-        for (var key in eventSchemaArray[i]) {
+        for (let key in eventSchemaArray[i]) {
             if (eventSchemaArray[i].hasOwnProperty(key)) {
                 if (mergedSchema.hasOwnProperty(key)) {
                     //before merging, check if there are multiple test definitions for the same key
-                    for (var dlv in eventSchemaArray[i][key]) {
+                    for (let dlv in eventSchemaArray[i][key]) {
                         if (mergedSchema[key].hasOwnProperty(dlv) && mergedSchema[key][dlv] !== eventSchemaArray[i][key][dlv]) {
                             //log this warning
                             console.groupCollapsed("Info: Multiple " + key + " definitions for variable: " + dlv);
@@ -448,11 +441,10 @@ TMSHelper.ignoreKeysForPlatform={profile1:["variable_that_never_exists_on_profil
 
     // --- Run the tests! ---
     dbg("Starting tests");
-    for (var i = 0; i < eventSchemaArray.length; i++) {
+    for (let i = 0; i < eventSchemaArray.length; i++) {
         // for each schema to test against (eg "allEvents", "view_ecommerce_detail"), ...
         for (let key in eventSchemaArray[i]) {
             // ... go through each key in the schema (e.g. "populatedAndOfType", "notPopulated", "fullOrRegExMatch", ...)
-            testCounter += eventSchemaArray[i][key].length || Object.keys(eventSchemaArray[i][key]).length; // get the number of tests (= variables to check)
             dbg("Running Tests of type "+ key);
             if (eventSchemaArray[i].hasOwnProperty(key)) {
                 if (key === "populatedAndOfType") {
@@ -466,78 +458,69 @@ TMSHelper.ignoreKeysForPlatform={profile1:["variable_that_never_exists_on_profil
         }
     }
     console.log("-------------------------------------");
-    console.groupCollapsed("Test Summary");
-    console.log("Finished " + testFinishedCounter + "/" + testCounter + " Tests\n");
     console.groupEnd();
 
-    // log separately to influxDB if an Event had no test defined for it
-    var ts = 0,
-        data = "";
-    if (TMSHelper.populated(noTestDefined)) {
-        ts = Math.round(new Date().getTime());
-        data = `Info,infoType=noTestDefined,variable=na,event=${eventName} counter=1 ${ts} \n`;
-        // UNCOMMENT THIS IF YOU HAVE YOUR OWN INFLUXDB Connection:
-        // TMSHelper.sendDataToInfluxDB(data);
-    }
 
-    // log the passed tests
-    if (typeof errorMessage !== "undefined" && errorMessage !== "") {
-        let msg = (Object.keys(error.data).length.toString() + " Tests failed");
-        console.error(msg); // console.error is needed to make the Tealium test output red and not green (however
-        // Tealium puts this to the very end of the console output, so we continue the rest with normal console.log)
-        console.log(msg);
-        dbg(JSON.stringify(error.data, null, 4));
-        for (let key in error.data) {
-            if (error.data[key].length) {
+    // log the failed tests
+    let errors = 0; // count errors
+    for (let key in errorLog.data) {
+        errors += errorLog.data[key].length;
+    }
+    let msg = errors +" Tests failed";
+    console.log(msg);
+    if (errors > 0) {
+        console.error(msg); // console.error is needed to make the Tealium test output red and not green (however,
+        // Tealium puts errors to the very end of the console output, so we also had to do a console.log before)
+        for (let key in errorLog.data) {
+            if (errorLog.data[key].length) {
                 console.groupCollapsed("Failed Tests for " + key + ":");
-                for (let i in error.data[key]) {
-                    console.log(error.data[key][i]["message"]);
+                for (let i in errorLog.data[key]) {
+                    console.log(errorLog.data[key][i]["message"]);
                 }
                 console.groupEnd();
                 console.log("-------------------------------------");
             }
         }
-
-        ts = Math.round(new Date().getTime());
-        data = "";
-        for (let key in error.data) {
-            for (let i in error.data[key]) {
-                data += `Error,errorType=${key},variable=${error.data[key][i]["var"]},event=${error.data[key][i]["event"]} counter=1 ${ts} \n`;
+        /* INFLUXDB: UNCOMMENT AND CONFIGURE THIS IF YOU HAVE YOUR OWN INFLUXDB CONNECTION
+        let ts = Math.round(new Date().getTime());
+        let data = "";
+        for (let key in errorLog.data) {
+            for (let i in errorLog.data[key]) {
+                data += `Error,errorType=${key},variable=${errorLog.data[key][i]["var"]},event=${errorLog.data[key][i]["event"]} counter=1 ${ts} \n`;
             }
         }
-        // UNCOMMENT THIS IF YOU HAVE YOUR OWN INFLUXDB CONNECTION
-        // dbg("Sending Error to influxDB");
-        // TMSHelper.sendDataToInfluxDB(data);
+        dbg("Sending Error to influxDB");
+        TMSHelper.sendDataToInfluxDB(data);
+        INFLUXDB: END */
+
 
         // UNCOMMENT THIS IF YOU HAVE YOUR OWN GCLOUD CONNECTION
         // log to Google Cloud Function
-        // dbg("Sending Error to Google Cloud Function");
-        // TMSHelper.logErrorToGCF(error);
+        dbg("Sending Error to Google Cloud Function");
+        TMSHelper.logErrorToGCF(errorLog);
 
-        // ADD OTHER ERROR LOGGING DESTINATIONS HERE
-
-        console.groupCollapsed("Data Layer (only logged if debug active):");
-        dbg(JSON.stringify(eventData, null, 1));
-        console.groupEnd();
-        TMSHelper.dataLayerLogged = true;
-    } else {
-        if (dbgActive) { // in debug mode, log all passed tests to Tealium console
+    }
+    let passes = 0; // count errors
+    for (let key in testLog.data) {
+        passes += testLog.data[key].length;
+    }
+    msg = passes +" Tests passed";
+    console.log(msg);
+    if (dbgActive) { // in debug mode, log all passed tests to Tealium console
             console.log("Passed Tests:");
-            for (let key in test.data) {
+            for (let key in testLog.data) {
                 console.groupCollapsed(key + " Tests");
-                if (test.data.hasOwnProperty(key)) {
-                    for (let i in test.data[key]) {
-                        console.log(test.data[key][i].result);
+                if (testLog.data.hasOwnProperty(key)) {
+                    for (let i in testLog.data[key]) {
+                        console.log(testLog.data[key][i].result);
                     }
                     console.groupEnd();
                     console.log("-------------------------------------");
                 }
             }
-            if (!TMSHelper.dataLayerLogged) {
-                console.groupCollapsed("Data Layer:");
-                console.log(JSON.stringify(eventData, null, 1)); // avoid truncation
-                console.groupEnd();
-            }
+            console.groupCollapsed("Data Layer:");
+            console.log(JSON.stringify(eventData, null, 1)); // avoid truncation
+            console.groupEnd();
+
         }
-    }
 })();
