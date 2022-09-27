@@ -72,7 +72,7 @@ TMSHelper.ignoreKeysForPlatform={profile1:["variable_that_never_exists_on_profil
             testLog.data[testType] = [];
         }
         testLog.data[testType].push({var: variable, result: testResult});
-        dbg("Added test result to testLog: " + testType + " - " + variable + " - " + testResult);
+        // dbg("Added test result to testLog: " + testType + " - " + variable + " - " + testResult);
     };
 
     // Error Log
@@ -256,8 +256,8 @@ TMSHelper.ignoreKeysForPlatform={profile1:["variable_that_never_exists_on_profil
      */
     TMSHelper.sendDataToInfluxDB = async function (data) {
         // send error to influxdb
-        let tokens = JSON.parse(store.get("tokens"));
-        let url = "https://eu-central-1-1.aws.cloud2.influxdata.com/api/v2/write?org=xxx&bucket=xxx&precision=ms";
+        const tokens = JSON.parse(store.get("tokens"));
+        const url = "https://eu-central-1-1.aws.cloud2.influxdata.com/api/v2/write?org=xxx&bucket=xxx&precision=ms";
         const response = await fetch(url, {
             method: "POST",
             headers: {
