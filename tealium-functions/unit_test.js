@@ -45,12 +45,6 @@ const downloadTestDefinitions = false; // set to true if you want to download yo
         dbg("YOUR TEST DEFINITION MAY BE OUTDATED!!");
     }
 
-    // Blacklist: Use like in Mocha for Events which should not be tested (eg no proper tests defined yet)
-    if (eventData["tool_mochaTestFlag"] === "0") {
-        console.log("No test desired for this Event: " + eventName + ". Quitting.");
-        return;
-    }
-
     let TMSHelper = {};
     // @formatter:off
 // insert newest shared (between Mocha and Tealium Functions) helper functions via `gulp updateHelpers`
