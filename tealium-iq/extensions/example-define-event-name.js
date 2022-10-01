@@ -12,8 +12,3 @@ try {
 compCat = compCat || b["oss_type"] || b["page_type"] || location.pathname;
 compSub = compSub || b["oss_interaction"] || "na";
 b["event_name"] = [b["ut.event"], compCat, compSub].join("__");
-
-// TODO if this Extension is an "After Load Rules Extension" (which it probably should be in most cases), uncomment the
-//  following line to re-evaluate load rules after this Extension has run (otherwise, your mocha tag will not fire if
-//  you have not defined an event_name elsewhere)
-// utag.handler.LR(b);
