@@ -12,7 +12,7 @@
     },
     "fullOrRegExMatch": {
       // any text is fine
-      "component_attribute2": "..*",
+      "component_attribute2": "/..*/",
       // always "go-to" for outbound links
       "component_attribute3": "go-to"
     },

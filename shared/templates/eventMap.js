@@ -165,30 +165,6 @@ window.TMSHelper = window.TMSHelper || {}; TMSHelper.event2DLVarMap = {
         }
     }
 }
-,"link__nav__outbound": {
-  "import": [
-    "tpl_linkClicks"
-  ],
-  // import
-  "eventSchema": {
-    "populatedAndOfType": {
-      // no need to redefine comp_cat, sub_cat and attr1-2 as we inherit them from tpl_linkClicks
-      // next 2 definitions override tpl_linkClicks:
-      "component_attribute3": "array",
-      "component_attribute4": "array",
-    },
-    "fullOrRegExMatch": {
-      // any text is fine
-      "component_attribute2": "..*",
-      // always "go-to" for outbound links
-      "component_attribute3": "go-to"
-    },
-    "functionMatch": {
-      // make sure this is really a link to another site. To edit function match functions, edit helpers.js in shared/templates folder
-      "component_attribute4": "isExternalHost"
-    }
-  }
-}
 ,"tpl_cartAddEvents": {
     "eventSchema": {
         "populatedAndOfType": {
@@ -205,24 +181,6 @@ window.TMSHelper = window.TMSHelper || {}; TMSHelper.event2DLVarMap = {
             "order_id": "!!",
             "persistPageContext": "y",
             "prod_actionIsCartAdd": "y"
-        }
-    }
-}
-,"tpl_linkClicks": {
-    "eventSchema": {
-        "populatedAndOfType": {
-            "component_category": "array",
-            "component_subcategory": "array",
-            "component_attribute1": "array",
-            "component_attribute2": "array",
-            "component_attribute3": "**array", // overridden by link clicks that actually need attr3
-            "component_attribute4": "**array", // overridden by link clicks that actually need attr4
-            "component_attribute5": "**array", // overridden by link clicks that actually need attr5
-            "order_id": "!!"
-        },
-        "fullOrRegExMatch": {
-            "component_category": "nav",
-            "component_attribute1": "//regExpValidUrl" // must always be a valid URL (the link URL)
         }
     }
 }
