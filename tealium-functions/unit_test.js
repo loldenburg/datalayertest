@@ -490,8 +490,8 @@ TMSHelper.ignoreKeysForPlatform={profile1:["variable_that_never_exists_on_profil
 
         // UNCOMMENT THIS IF YOU HAVE YOUR OWN GCLOUD CONNECTION
         // log to Google Cloud Function
-        dbg("Sending Error to Google Cloud Function");
-        TMSHelper.logErrorToGCF(errorLog);
+        // dbg("Sending Error to Google Cloud Function");
+        // TMSHelper.logErrorToGCF(errorLog);
 
     }
     let passes = 0; // count errors
