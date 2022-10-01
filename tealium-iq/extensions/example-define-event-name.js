@@ -13,17 +13,7 @@ compCat = compCat || b["oss_type"] || b["page_type"] || location.pathname;
 compSub = compSub || b["oss_interaction"] || "na";
 b["event_name"] = [b["ut.event"], compCat, compSub].join("__");
 
-// tool_mochaTestFlag: 1 if current Hit should be evaluated for mocha/chai tests
-b["tool_mochaTestFlag"] = b["tool_mochaTestFlag"] || "1";
-TMSHelper.mochaChaiBlackListEvents = [/__list__view/, /__error__/]; // we don't want list view or error Events to be tested client-side for now
-for (let i = 0; i < TMSHelper.mochaChaiBlackListEvents.length; i++) {
-    if (b["event_name"].search(TMSHelper.mochaChaiBlackListEvents[i]) !== -1) {
-        b["tool_mochaTestFlag"] = "0";
-        break;
-    }
-}
-
-// todo if this Extension is an "After Load Rules Extension" (which it probably should be in most cases), uncomment the
+// TODO if this Extension is an "After Load Rules Extension" (which it probably should be in most cases), uncomment the
 //  following line to re-evaluate load rules after this Extension has run (otherwise, your mocha tag will not fire if
-//  its load rule is bound to the tool_mochaTestFlag variable)
+//  you have not defined an event_name elsewhere)
 // utag.handler.LR(b);
