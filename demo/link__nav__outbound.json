@@ -1,0 +1,24 @@
+{
+  "import": [
+    "tpl_linkClicks"
+  ],
+  // import
+  "eventSchema": {
+    "populatedAndOfType": {
+      // no need to redefine comp_cat, sub_cat and attr1-2 as we inherit them from tpl_linkClicks
+      // next 2 definitions override tpl_linkClicks:
+      "component_attribute3": "array",
+      "component_attribute4": "array",
+    },
+    "fullOrRegExMatch": {
+      // any text is fine
+      "component_attribute2": "..*",
+      // always "go-to" for outbound links
+      "component_attribute3": "go-to"
+    },
+    "functionMatch": {
+      // make sure this is really a link to another site. To edit function match functions, edit helpers.js in shared/templates folder
+      "component_attribute4": "isExternalHost"
+    }
+  }
+}

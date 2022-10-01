@@ -12,6 +12,81 @@ TMSHelper.ignoreKeysForPlatform = {
     ]
 };
 /**
+ * collects functions that can be used in the "functionMatch" part of the schema to test a variable against more complex conditions
+ * The functions here are only for illustrative purposes, feel free to remove them
+ * A function is not tied to a particular variable
+ * @type {Object}
+ * @module helpers/functionMatchFunctions
+ */
+TMSHelper.functionMatchFunctions = {
+    /**
+     * checks if property is a valid URL
+     * @param dl {Object} - data layer
+     * @param prop {string} - property name to check
+     * @returns {boolean}
+     * @module helpers/functionMatchFunctions/isExternalHost
+     */
+    isExternalHost: function (dl, prop) {
+        const linkHost = dl[prop];
+        const currentHost = dl["url_host"] || location.hostname;
+        if (linkHost === currentHost) {
+            TMSHelper.handleError("isExternalHost: " + linkHost + " is the same as current host: " + currentHost, dl, prop, "functionMatch");
+        }
+        return true;
+    },
+    /**
+     * checks for value "fallback" in the first element of an array or a string
+     * @param dl {Object} - data layer
+     * @param prop {string} - property name to check
+     * @returns {boolean}
+     */
+    notFallback: function (dl, prop) {
+        var val = dl[prop];
+        if (val instanceof Array) {
+            val = val[0];
+        }
+        if (val === "fallback") {
+            return TMSHelper.handleError(prop + "is 'fallback'!", dl, prop, "functionMatch");
+        }
+        return true;
+    },
+    /**
+     * validates the page_category_name
+     * @param dl {Object} - data layer
+     * @param prop {string} - property name to check
+     * @returns {boolean}
+     * @module helpers/functionMatchFunctions/validatePageCategoryName
+     */
+    validatePageCategory: function (dl, prop) { // exists only on cat pages
+        if (dl.page_type === "Category") {
+            if (!dl[prop] || dl[prop].search(/[a-z]+[\-a-z]+/) === -1) {
+                return TMSHelper.handleError("page_category not defined or false value: " + dl[prop], dl, prop, "functionMatch");
+            }
+        }
+        return true;
+    },
+    /**
+     * ossTermCheck: checks if search term is formatted correctly or missing even though it should be there.
+     * @param {object} dl: the data layer
+     * @param {string} prop: the key in the data layer that contains the search term
+     * @returns {Boolean} true or throws Error
+     * @module helpers/ossTermCheck
+     */
+    ossTermCheck: function (dl, prop) {
+        if (TMSHelper.getParameterByName("query", dl["url_search"])) { // url param "query" exists
+            if (!dl[prop]) {
+                return TMSHelper.handleError("Search Term (" + prop + ") not set!", dl, prop, "functionMatch");
+            }
+            return true;
+        } else if (dl[prop] !== "*") {
+            return TMSHelper.handleError("Search Term (" + prop + ") should be *, but is " + dl[prop], dl, prop, "functionMatch");
+        }
+        return true;
+    }
+    //, next function
+};
+
+/**
  * console: uses the window.console.log function to log messages to console, checking if debug output is active
  * @param {*} msg - message to log
  * @param {boolean} [flag] - forces ignoring the debugActive flag (used e.g. by Error Handler) to log also when debugging is off
@@ -150,6 +225,14 @@ TMSHelper.sanitizeKey = function (key) {
     return key.slice(2);
 };
 /**
+ * regExpValidUrl: a very loose RegExp to validate a URL
+ * @type {string}
+ *
+ * @module helpers/regExpValidUrl
+ */
+TMSHelper.regExpValidUrl = "/((http|https)://)(www.)?.*\..*/";
+
+/**
  * Mocha/Chai: a RegExp to check any kind of price to be either in format 100.30 or 1 (int)
  * @type {string}
  *
@@ -213,63 +296,5 @@ TMSHelper.handleError = function (msg, dl, prop, testType) {
         return false;
     }
     throw Error(msg);
-};
-/**
- * collects functions that can be used in the "functionMatch" part of the schema to test a variable against more complex conditions
- * The functions here are only for illustrative purposes, feel free to remove them
- * A function is not tied to a particular variable
- * @type {Object}
- * @module helpers/functionMatchFunctions
- */
-TMSHelper.functionMatchFunctions = {
-    /**
-     * checks for value "fallback" in the first element of an array or a string
-     * @param dl {Object} - data layer
-     * @param prop {string} - property name to check
-     * @returns {boolean}
-     */
-    notFallback: function (dl, prop) {
-        var val = dl[prop];
-        if (val instanceof Array) {
-            val = val[0];
-        }
-        if (val === "fallback") {
-            return TMSHelper.handleError(prop + "is 'fallback'!", dl, prop, "functionMatch");
-        }
-        return true;
-    },
-    /**
-     * validates the page_category_name
-     * @param dl {Object} - data layer
-     * @param prop {string} - property name to check
-     * @returns {boolean}
-     */
-    validatePageCategory: function (dl, prop) { // exists only on cat pages
-        if (dl.page_type === "Category") {
-            if (!dl[prop] || dl[prop].search(/[a-z]+[\-a-z]+/) === -1) {
-                return TMSHelper.handleError("page_category not defined or false value: " + dl[prop], dl, prop, "functionMatch");
-            }
-        }
-        return true;
-    },
-    /**
-     * ossTermCheck: checks if search term is formatted correctly or missing even though it should be there.
-     * @param {object} dl: the data layer
-     * @param {string} prop: the key in the data layer that contains the search term
-     * @returns {Boolean} true or throws Error
-     * @module helpers/ossTermCheck
-     */
-    ossTermCheck: function (dl, prop) {
-        if (TMSHelper.getParameterByName("query", dl["url_search"])) { // url param "query" exists
-            if (!dl[prop]) {
-                return TMSHelper.handleError("Search Term (" + prop + ") not set!", dl, prop, "functionMatch");
-            }
-            return true;
-        } else if (dl[prop] !== "*") {
-            return TMSHelper.handleError("Search Term (" + prop + ") should be *, but is " + dl[prop], dl, prop, "functionMatch");
-        }
-        return true;
-    }
-    //, next function
 };
 const short = TMSHelper.shortPreview;
