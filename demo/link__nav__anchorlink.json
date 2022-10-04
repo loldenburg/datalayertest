@@ -1,0 +1,14 @@
+{
+  "import": [
+    "tpl_linkClicks"
+  ],
+  // import
+  "eventSchema": {
+    "fullOrRegExMatch": {
+      // link url with an anchor
+      "component_attribute1": "/((http|https)://)(www.)?.*..*#..*/",
+      "component_attribute2": "/..*/",
+      "component_attribute3": "scroll-to",
+    }
+  }
+}
