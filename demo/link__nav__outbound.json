@@ -8,7 +8,7 @@
       // no need to redefine comp_cat, sub_cat and attr1-2 as we inherit them from tpl_linkClicks
       // next 2 definitions override tpl_linkClicks:
       "component_attribute3": "array",
-      "component_attribute4": "array",
+      "component_attribute4": "array"
     },
     "fullOrRegExMatch": {
       // any text is fine
