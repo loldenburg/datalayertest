@@ -40,6 +40,81 @@ TMSHelper.ignoreKeysForPlatform = {
     ]
 };
 /**
+ * collects functions that can be used in the "functionMatch" part of the schema to test a variable against more complex conditions
+ * The functions here are only for illustrative purposes, feel free to remove them
+ * A function is not tied to a particular variable
+ * @type {Object}
+ * @module helpers/functionMatchFunctions
+ */
+TMSHelper.functionMatchFunctions = {
+    /**
+     * checks if property is a valid URL
+     * @param dl {Object} - data layer
+     * @param prop {string} - property name to check
+     * @returns {boolean}
+     * @module helpers/functionMatchFunctions/isExternalHost
+     */
+    isExternalHost: function (dl, prop) {
+        const linkHost = dl[prop];
+        const currentHost = dl["url_host"] || location.hostname;
+        if (linkHost === currentHost) {
+            TMSHelper.handleError("isExternalHost: " + linkHost + " is the same as current host: " + currentHost, dl, prop, "functionMatch");
+        }
+        return true;
+    },
+    /**
+     * checks for value "fallback" in the first element of an array or a string
+     * @param dl {Object} - data layer
+     * @param prop {string} - property name to check
+     * @returns {boolean}
+     */
+    notFallback: function (dl, prop) {
+        var val = dl[prop];
+        if (val instanceof Array) {
+            val = val[0];
+        }
+        if (val === "fallback") {
+            return TMSHelper.handleError(prop + "is 'fallback'!", dl, prop, "functionMatch");
+        }
+        return true;
+    },
+    /**
+     * validates the page_category_name
+     * @param dl {Object} - data layer
+     * @param prop {string} - property name to check
+     * @returns {boolean}
+     * @module helpers/functionMatchFunctions/validatePageCategoryName
+     */
+    validatePageCategory: function (dl, prop) { // exists only on cat pages
+        if (dl.page_type === "Category") {
+            if (!dl[prop] || dl[prop].search(/[a-z]+[\-a-z]+/) === -1) {
+                return TMSHelper.handleError("page_category not defined or false value: " + dl[prop], dl, prop, "functionMatch");
+            }
+        }
+        return true;
+    },
+    /**
+     * ossTermCheck: checks if search term is formatted correctly or missing even though it should be there.
+     * @param {object} dl: the data layer
+     * @param {string} prop: the key in the data layer that contains the search term
+     * @returns {Boolean} true or throws Error
+     * @module helpers/ossTermCheck
+     */
+    ossTermCheck: function (dl, prop) {
+        if (TMSHelper.getParameterByName("query", dl["url_search"])) { // url param "query" exists
+            if (!dl[prop]) {
+                return TMSHelper.handleError("Search Term (" + prop + ") not set!", dl, prop, "functionMatch");
+            }
+            return true;
+        } else if (dl[prop] !== "*") {
+            return TMSHelper.handleError("Search Term (" + prop + ") should be *, but is " + dl[prop], dl, prop, "functionMatch");
+        }
+        return true;
+    }
+    //, next function
+};
+
+/**
  * console: uses the window.console.log function to log messages to console, checking if debug output is active
  * @param {*} msg - message to log
  * @param {boolean} [flag] - forces ignoring the debugActive flag (used e.g. by Error Handler) to log also when debugging is off
@@ -178,6 +253,14 @@ TMSHelper.sanitizeKey = function (key) {
     return key.slice(2);
 };
 /**
+ * regExpValidUrl: a very loose RegExp to validate a URL
+ * @type {string}
+ *
+ * @module helpers/regExpValidUrl
+ */
+TMSHelper.regExpValidUrl = "/((http|https)://)(www.)?.*\..*/";
+
+/**
  * Mocha/Chai: a RegExp to check any kind of price to be either in format 100.30 or 1 (int)
  * @type {string}
  *
@@ -242,64 +325,6 @@ TMSHelper.handleError = function (msg, dl, prop, testType) {
     }
     throw Error(msg);
 };
-/**
- * collects functions that can be used in the "functionMatch" part of the schema to test a variable against more complex conditions
- * The functions here are only for illustrative purposes, feel free to remove them
- * A function is not tied to a particular variable
- * @type {Object}
- * @module helpers/functionMatchFunctions
- */
-TMSHelper.functionMatchFunctions = {
-    /**
-     * checks for value "fallback" in the first element of an array or a string
-     * @param dl {Object} - data layer
-     * @param prop {string} - property name to check
-     * @returns {boolean}
-     */
-    notFallback: function (dl, prop) {
-        var val = dl[prop];
-        if (val instanceof Array) {
-            val = val[0];
-        }
-        if (val === "fallback") {
-            return TMSHelper.handleError(prop + "is 'fallback'!", dl, prop, "functionMatch");
-        }
-        return true;
-    },
-    /**
-     * validates the page_category_name
-     * @param dl {Object} - data layer
-     * @param prop {string} - property name to check
-     * @returns {boolean}
-     */
-    validatePageCategory: function (dl, prop) { // exists only on cat pages
-        if (dl.page_type === "Category") {
-            if (!dl[prop] || dl[prop].search(/[a-z]+[\-a-z]+/) === -1) {
-                return TMSHelper.handleError("page_category not defined or false value: " + dl[prop], dl, prop, "functionMatch");
-            }
-        }
-        return true;
-    },
-    /**
-     * ossTermCheck: checks if search term is formatted correctly or missing even though it should be there.
-     * @param {object} dl: the data layer
-     * @param {string} prop: the key in the data layer that contains the search term
-     * @returns {Boolean} true or throws Error
-     * @module helpers/ossTermCheck
-     */
-    ossTermCheck: function (dl, prop) {
-        if (TMSHelper.getParameterByName("query", dl["url_search"])) { // url param "query" exists
-            if (!dl[prop]) {
-                return TMSHelper.handleError("Search Term (" + prop + ") not set!", dl, prop, "functionMatch");
-            }
-            return true;
-        } else if (dl[prop] !== "*") {
-            return TMSHelper.handleError("Search Term (" + prop + ") should be *, but is " + dl[prop], dl, prop, "functionMatch");
-        }
-        return true;
-    }
-    //, next function
-};
 const short = TMSHelper.shortPreview;</code></pre>
         </article>
     </section>
@@ -310,13 +335,13 @@ const short = TMSHelper.shortPreview;</code></pre>
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-helpers_console.html">helpers/console</a></li><li><a href="module-helpers_functionMatchFunctions.html">helpers/functionMatchFunctions</a></li><li><a href="module-helpers_getParameterByName.html">helpers/getParameterByName</a></li><li><a href="module-helpers_handleError.html">helpers/handleError</a></li><li><a href="module-helpers_logicalTest.html">helpers/logicalTest</a></li><li><a href="module-helpers_ossTermCheck.html">helpers/ossTermCheck</a></li><li><a href="module-helpers_populated.html">helpers/populated</a></li><li><a href="module-helpers_positiveInt.html">helpers/positiveInt</a></li><li><a href="module-helpers_positiveIntOrZero.html">helpers/positiveIntOrZero</a></li><li><a href="module-helpers_regExpPrice.html">helpers/regExpPrice</a></li><li><a href="module-helpers_sanitizeKey.html">helpers/sanitizeKey</a></li><li><a href="module-helpers_skipTest.html">helpers/skipTest</a></li><li><a href="module-helpers_typeOf.html">helpers/typeOf</a></li><li><a href="module-tests_dbg.html">tests/dbg</a></li><li><a href="module-tests_event2DLVarMap.html">tests/event2DLVarMap</a></li><li><a href="module-tests_fullOrRegExMatchMocha.html">tests/fullOrRegExMatchMocha</a></li><li><a href="module-tests_fullOrRegExMatchTealFunctions.html">tests/fullOrRegExMatchTealFunctions</a></li><li><a href="module-tests_getEvent2DLVarMap.html">tests/getEvent2DLVarMap</a></li><li><a href="module-tests_getEvent2DLVarMap_get.html">tests/getEvent2DLVarMap/get</a></li><li><a href="module-tests_ignoreKeysForPlatform.html">tests/ignoreKeysForPlatform</a></li><li><a href="module-tests_importLibTealFunctions.html">tests/importLibTealFunctions</a></li><li><a href="module-tests_logErrorToGCF.html">tests/logErrorToGCF</a></li><li><a href="module-tests_mergeTestMapsAndFireTests.html">tests/mergeTestMapsAndFireTests</a></li><li><a href="module-tests_mochaChaiExt.html">tests/mochaChaiExt</a></li><li><a href="module-tests_notPopulatedthrow.html">tests/notPopulatedthrow</a></li><li><a href="module-tests_populatedAndOfTypeMocha.html">tests/populatedAndOfTypeMocha</a></li><li><a href="module-tests_populatedAndofTypeTealFunctions.html">tests/populatedAndofTypeTealFunctions</a></li><li><a href="module-tests_runDataLayerTests.html">tests/runDataLayerTests</a></li><li><a href="module-tests_runEventMapTests.html">tests/runEventMapTests</a></li><li><a href="module-tests_sendDataToInfluxDB.html">tests/sendDataToInfluxDB</a></li><li><a href="module-tests_shortPreview.html">tests/shortPreview</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-helpers_console.html">helpers/console</a></li><li><a href="module-helpers_functionMatchFunctions.html">helpers/functionMatchFunctions</a></li><li><a href="module-helpers_functionMatchFunctions_isExternalHost.html">helpers/functionMatchFunctions/isExternalHost</a></li><li><a href="module-helpers_functionMatchFunctions_validatePageCategoryName.html">helpers/functionMatchFunctions/validatePageCategoryName</a></li><li><a href="module-helpers_getParameterByName.html">helpers/getParameterByName</a></li><li><a href="module-helpers_handleError.html">helpers/handleError</a></li><li><a href="module-helpers_logicalTest.html">helpers/logicalTest</a></li><li><a href="module-helpers_ossTermCheck.html">helpers/ossTermCheck</a></li><li><a href="module-helpers_populated.html">helpers/populated</a></li><li><a href="module-helpers_positiveInt.html">helpers/positiveInt</a></li><li><a href="module-helpers_positiveIntOrZero.html">helpers/positiveIntOrZero</a></li><li><a href="module-helpers_regExpPrice.html">helpers/regExpPrice</a></li><li><a href="module-helpers_regExpValidUrl.html">helpers/regExpValidUrl</a></li><li><a href="module-helpers_sanitizeKey.html">helpers/sanitizeKey</a></li><li><a href="module-helpers_skipTest.html">helpers/skipTest</a></li><li><a href="module-helpers_typeOf.html">helpers/typeOf</a></li><li><a href="module-tests_dbg.html">tests/dbg</a></li><li><a href="module-tests_event2DLVarMap.html">tests/event2DLVarMap</a></li><li><a href="module-tests_fullOrRegExMatchMocha.html">tests/fullOrRegExMatchMocha</a></li><li><a href="module-tests_fullOrRegExMatchTealFunctions.html">tests/fullOrRegExMatchTealFunctions</a></li><li><a href="module-tests_getEvent2DLVarMap.html">tests/getEvent2DLVarMap</a></li><li><a href="module-tests_getEvent2DLVarMap_get.html">tests/getEvent2DLVarMap/get</a></li><li><a href="module-tests_ignoreKeysForPlatform.html">tests/ignoreKeysForPlatform</a></li><li><a href="module-tests_importLibTealFunctions.html">tests/importLibTealFunctions</a></li><li><a href="module-tests_logErrorToGCF.html">tests/logErrorToGCF</a></li><li><a href="module-tests_mergeTestMapsAndFireTests.html">tests/mergeTestMapsAndFireTests</a></li><li><a href="module-tests_mochaChaiExt.html">tests/mochaChaiExt</a></li><li><a href="module-tests_notPopulatedthrow.html">tests/notPopulatedthrow</a></li><li><a href="module-tests_populatedAndOfTypeMocha.html">tests/populatedAndOfTypeMocha</a></li><li><a href="module-tests_populatedAndofTypeTealFunctions.html">tests/populatedAndofTypeTealFunctions</a></li><li><a href="module-tests_runDataLayerTests.html">tests/runDataLayerTests</a></li><li><a href="module-tests_runEventMapTests.html">tests/runEventMapTests</a></li><li><a href="module-tests_sendDataToInfluxDB.html">tests/sendDataToInfluxDB</a></li><li><a href="module-tests_shortPreview.html">tests/shortPreview</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.11</a> on Mon Sep 19 2022 09:08:21 GMT+0200 (Mitteleuropäische Sommerzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.11</a> on Tue Oct 04 2022 17:32:54 GMT+0200 (Mitteleuropäische Sommerzeit)
 </footer>
 
 <script> prettyPrint(); </script>

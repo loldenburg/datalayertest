@@ -26,7 +26,7 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>// start mocha Extension code. Add this as the last "After Tags" Extension in Tealium iQ (and do not publish to PROD!)
+            <pre class="prettyprint source linenums"><code>// start mocha Extension code. Add this as a Pre-Loader Extension in Tealium iQ. It has to come AFTER the eventMapAndHelpers.js Pre-Loader Extension.
 "use strict";
 window.TMSHelper = window.TMSHelper || {};
 /**
@@ -35,7 +35,6 @@ window.TMSHelper = window.TMSHelper || {};
  * @module tests/mochaChaiExt
  */
 TMSHelper.mochaChaiExt = true;
-
 /**
  * event2DLVarMap: test definitions per event name/data layer variable.
  * The code as-is expects you to have an object TMSHelper.event2DLVarMap defined prior to this extension
@@ -61,15 +60,11 @@ TMSHelper.mochaChaiExt = true;
  *
  * @module tests/event2DLVarMap
  */
-TMSHelper.event2DLVarMap = TMSHelper.event2DLVarMap || {}; // INSERT YOUR Data Layer Tests (JSON "map") here or set it via a previous extension
-
-// insert newest shared (between Mocha and Tealium Functions) helper functions via `gulp updateHelpers`
-// @formatter:off
-// Shared TMSHelper functions start
-TMSHelper.ignoreKeysForPlatform={profile1:["variable_that_never_exists_on_profile1"],profile2:["cp.a_cookie_variable_that_never_exists_on_profile2","some_other_variable_that_never_exists_on_profile2"]},TMSHelper.console=function(e,r){var t=!1,t="function"!=typeof TMSHelper.debugActive||TMSHelper.debugActive();(t=r?!0:t)&amp;&amp;console.log(e)},TMSHelper.populated=function(e,r,t){if(!e)return!(!r||0!==e)||!(!t||!1!==e);if(e instanceof Array){if(e.length)for(var n=0,o=e.length;n&lt;o;n++){if(e[n])return!0;if(r&amp;&amp;0===e[n])return!0;if(t&amp;&amp;!1===e[n])return!0}}else if(e)return!0;return!1},TMSHelper.typeOf=function(e){return{}.toString.call(e).match(/\s([a-zA-Z]+)/)[1].toLowerCase()},TMSHelper.shortPreview=function(e,r){if(r=r||80,TMSHelper.populated(e))return e=(e="regexp"===TMSHelper.typeOf(e)?e.toString():JSON.stringify(e)).length>r?e.slice(0,r)+"...":e},TMSHelper.skipTest=function(e,r){if(TMSHelper.ignoreKeysForPlatform[r["ut.profile"]]&amp;&amp;-1!==TMSHelper.ignoreKeysForPlatform[r["ut.profile"]].indexOf(TMSHelper.sanitizeKey(e)))return!0;if(-1===e.search(/^[MT]~/))return!1;r=e.slice(0,2);return TMSHelper.mochaChaiExt?"M~"!==r:"T~"!==r},TMSHelper.sanitizeKey=function(e){return-1===e.search(/^[MT]~/)?e:e.slice(2)},TMSHelper.regExpPrice="/^([1-9]\\d*|0)(\\.\\d{1,2}|)$/",TMSHelper.positiveInt="/^[1-9]\\d*$/",TMSHelper.positiveIntOrZero="/^(zero|[1-9]\\d*)$/",TMSHelper.logicalTest=function(r,t,e,n){if(t.hasOwnProperty("switch")){var o=Object.keys(t.switch)[0],t=t.switch[o][e[o]]||t.switch[o].default;if(TMSHelper.mochaChaiExt)return TMSHelper[n](r,t,e);{let e={};return e[r]=t,TMSHelper[n](e)}}TMSHelper.handleError("Unhandled logical test type",e,r,n)},TMSHelper.handleError=function(e,r,t,n){if(TMSHelper.mochaChaiExt)throw Error(e);return error.add(n,t,eventName,e),!1},TMSHelper.functionMatchFunctions={notFallback:function(e,r){var t=e[r];return"fallback"!==(t=t instanceof Array?t[0]:t)||TMSHelper.handleError(r+"is 'fallback'!",e,r,"functionMatch")},validatePageCategory:function(e,r){return!!("Category"!==e.page_type||e[r]&amp;&amp;-1!==e[r].search(/[a-z]+[\-a-z]+/))||TMSHelper.handleError("page_category not defined or false value: "+e[r],e,r,"functionMatch")},ossTermCheck:function(e,r){return TMSHelper.getParameterByName("query",e.url_search)?!!e[r]||TMSHelper.handleError("Search Term ("+r+") not set!",e,r,"functionMatch"):"*"===e[r]||TMSHelper.handleError("Search Term ("+r+") should be *, but is "+e[r],e,r,"functionMatch")}};const short=TMSHelper.shortPreview;
-// Shared TMSHelper functions end
-// @formatter:on
-
+TMSHelper.event2DLVarMap = TMSHelper.event2DLVarMap || null; // INSERT YOUR Data Layer Tests (JSON "map") here or set it via a previous extension
+if (TMSHelper.event2DLVarMap === null) {
+    console.error("TMSHelper.event2DLVarMap (Map with Test definitions) is not defined! Please define it before this extension!");
+}
+const short = TMSHelper.shortPreview;
 // Mocha-specific Helper functions
 /**
  * populatedAndOfType: checks if a data layer property is populated and of type (according to utag.ut.typeOf logic: "regexp, string, object, number, boolean").
@@ -219,7 +214,7 @@ TMSHelper.runDataLayerTests = function (dl) {
     mocha.cleanReferencesAfterRun(false);
 
     // log processed b object ("output data layer") to console
-    console.log("--Final processed 'output' Data Layer used for Mocha/Chai Tests--", b);
+    console.log("--Final processed 'output' Data Layer used for Mocha/Chai Tests--", dl);
 
     /**
      * Runs tests for a particular Event
@@ -382,13 +377,13 @@ TMSHelper.runDataLayerTests = function (dl) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-helpers_console.html">helpers/console</a></li><li><a href="module-helpers_functionMatchFunctions.html">helpers/functionMatchFunctions</a></li><li><a href="module-helpers_getParameterByName.html">helpers/getParameterByName</a></li><li><a href="module-helpers_handleError.html">helpers/handleError</a></li><li><a href="module-helpers_logicalTest.html">helpers/logicalTest</a></li><li><a href="module-helpers_ossTermCheck.html">helpers/ossTermCheck</a></li><li><a href="module-helpers_populated.html">helpers/populated</a></li><li><a href="module-helpers_positiveInt.html">helpers/positiveInt</a></li><li><a href="module-helpers_positiveIntOrZero.html">helpers/positiveIntOrZero</a></li><li><a href="module-helpers_regExpPrice.html">helpers/regExpPrice</a></li><li><a href="module-helpers_sanitizeKey.html">helpers/sanitizeKey</a></li><li><a href="module-helpers_skipTest.html">helpers/skipTest</a></li><li><a href="module-helpers_typeOf.html">helpers/typeOf</a></li><li><a href="module-tests_dbg.html">tests/dbg</a></li><li><a href="module-tests_event2DLVarMap.html">tests/event2DLVarMap</a></li><li><a href="module-tests_fullOrRegExMatchMocha.html">tests/fullOrRegExMatchMocha</a></li><li><a href="module-tests_fullOrRegExMatchTealFunctions.html">tests/fullOrRegExMatchTealFunctions</a></li><li><a href="module-tests_getEvent2DLVarMap.html">tests/getEvent2DLVarMap</a></li><li><a href="module-tests_getEvent2DLVarMap_get.html">tests/getEvent2DLVarMap/get</a></li><li><a href="module-tests_ignoreKeysForPlatform.html">tests/ignoreKeysForPlatform</a></li><li><a href="module-tests_importLibTealFunctions.html">tests/importLibTealFunctions</a></li><li><a href="module-tests_logErrorToGCF.html">tests/logErrorToGCF</a></li><li><a href="module-tests_mergeTestMapsAndFireTests.html">tests/mergeTestMapsAndFireTests</a></li><li><a href="module-tests_mochaChaiExt.html">tests/mochaChaiExt</a></li><li><a href="module-tests_notPopulatedthrow.html">tests/notPopulatedthrow</a></li><li><a href="module-tests_populatedAndOfTypeMocha.html">tests/populatedAndOfTypeMocha</a></li><li><a href="module-tests_populatedAndofTypeTealFunctions.html">tests/populatedAndofTypeTealFunctions</a></li><li><a href="module-tests_runDataLayerTests.html">tests/runDataLayerTests</a></li><li><a href="module-tests_runEventMapTests.html">tests/runEventMapTests</a></li><li><a href="module-tests_sendDataToInfluxDB.html">tests/sendDataToInfluxDB</a></li><li><a href="module-tests_shortPreview.html">tests/shortPreview</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-helpers_console.html">helpers/console</a></li><li><a href="module-helpers_functionMatchFunctions.html">helpers/functionMatchFunctions</a></li><li><a href="module-helpers_functionMatchFunctions_isExternalHost.html">helpers/functionMatchFunctions/isExternalHost</a></li><li><a href="module-helpers_functionMatchFunctions_validatePageCategoryName.html">helpers/functionMatchFunctions/validatePageCategoryName</a></li><li><a href="module-helpers_getParameterByName.html">helpers/getParameterByName</a></li><li><a href="module-helpers_handleError.html">helpers/handleError</a></li><li><a href="module-helpers_logicalTest.html">helpers/logicalTest</a></li><li><a href="module-helpers_ossTermCheck.html">helpers/ossTermCheck</a></li><li><a href="module-helpers_populated.html">helpers/populated</a></li><li><a href="module-helpers_positiveInt.html">helpers/positiveInt</a></li><li><a href="module-helpers_positiveIntOrZero.html">helpers/positiveIntOrZero</a></li><li><a href="module-helpers_regExpPrice.html">helpers/regExpPrice</a></li><li><a href="module-helpers_regExpValidUrl.html">helpers/regExpValidUrl</a></li><li><a href="module-helpers_sanitizeKey.html">helpers/sanitizeKey</a></li><li><a href="module-helpers_skipTest.html">helpers/skipTest</a></li><li><a href="module-helpers_typeOf.html">helpers/typeOf</a></li><li><a href="module-tests_dbg.html">tests/dbg</a></li><li><a href="module-tests_event2DLVarMap.html">tests/event2DLVarMap</a></li><li><a href="module-tests_fullOrRegExMatchMocha.html">tests/fullOrRegExMatchMocha</a></li><li><a href="module-tests_fullOrRegExMatchTealFunctions.html">tests/fullOrRegExMatchTealFunctions</a></li><li><a href="module-tests_getEvent2DLVarMap.html">tests/getEvent2DLVarMap</a></li><li><a href="module-tests_getEvent2DLVarMap_get.html">tests/getEvent2DLVarMap/get</a></li><li><a href="module-tests_ignoreKeysForPlatform.html">tests/ignoreKeysForPlatform</a></li><li><a href="module-tests_importLibTealFunctions.html">tests/importLibTealFunctions</a></li><li><a href="module-tests_logErrorToGCF.html">tests/logErrorToGCF</a></li><li><a href="module-tests_mergeTestMapsAndFireTests.html">tests/mergeTestMapsAndFireTests</a></li><li><a href="module-tests_mochaChaiExt.html">tests/mochaChaiExt</a></li><li><a href="module-tests_notPopulatedthrow.html">tests/notPopulatedthrow</a></li><li><a href="module-tests_populatedAndOfTypeMocha.html">tests/populatedAndOfTypeMocha</a></li><li><a href="module-tests_populatedAndofTypeTealFunctions.html">tests/populatedAndofTypeTealFunctions</a></li><li><a href="module-tests_runDataLayerTests.html">tests/runDataLayerTests</a></li><li><a href="module-tests_runEventMapTests.html">tests/runEventMapTests</a></li><li><a href="module-tests_sendDataToInfluxDB.html">tests/sendDataToInfluxDB</a></li><li><a href="module-tests_shortPreview.html">tests/shortPreview</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.11</a> on Mon Sep 19 2022 09:08:21 GMT+0200 (Mitteleuropäische Sommerzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.11</a> on Tue Oct 04 2022 17:32:54 GMT+0200 (Mitteleuropäische Sommerzeit)
 </footer>
 
 <script> prettyPrint(); </script>
