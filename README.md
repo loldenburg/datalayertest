@@ -1,13 +1,16 @@
 # Tealium Client-and-Server-Side Data Layer Testing Framework
 
 # Meta
+
 This is the repository with the Tealium iQ- & Tealium CDP-related code for the client-and-server-side data layer testing
 framework presented in this article series:
- * https://thebounce.io/the-issues-of-tracking-qa-solutions-and-what-a-better-one-could-look-like-a883ed527b1
- * https://thebounce.io/using-mocha-chai-js-tealium-for-client-side-data-layer-testing-9eea7807942a
- * https://thebounce.io/use-your-server-side-tms-to-qa-your-data-collection-in-the-real-world-7137376ca9a9
 
-For the Python code and step-by-step guide to set up the **Google Cloud Platform** part of the framework, see https://github.com/loldenburg/datalayertests-gcp
+* https://thebounce.io/the-issues-of-tracking-qa-solutions-and-what-a-better-one-could-look-like-a883ed527b1
+* https://thebounce.io/using-mocha-chai-js-tealium-for-client-side-data-layer-testing-9eea7807942a
+* https://thebounce.io/use-your-server-side-tms-to-qa-your-data-collection-in-the-real-world-7137376ca9a9
+
+For the Python code and step-by-step guide to set up the **Google Cloud Platform** part of the framework,
+see https://github.com/loldenburg/datalayertests-gcp
 
 ## Summary
 
@@ -24,8 +27,8 @@ In the Tealium iQ (MochaChai) variant, errors are reported visually as you brows
 [YouTube video on MochaChai JS client-side data layer tests](https://www.youtube.com/watch?v=82UoFKqmZHw)
 
 In the server-side variant, errors are logged in the Tealium Functions console and/or to your destination of choice (you
-need to set this part up yourself), e.g. a Google Cloud Function + Firestore for deeper debugging and an influxDB for
-monitoring.
+need to set this part up yourself), e.g. a Google Cloud Function + Firestore for deeper debugging + BigQuery & Data
+Studio or an influxDB / Grafana dashboard for monitoring.
 
 ![img_1.png](img_1.png)
 Tealium Function Logs
@@ -36,42 +39,68 @@ InfluxDB
 ![img_4.png](img_4.png)
 Google Cloud Firestore
 
+![Data Studio Example](data-studio-example.png)
+Data Studio (via BigQuery)
+
 The Tealium Functions part of this framework is a much-enhanced and partially rewritten fork of Łukasz Cieloch's draft
-which you can view here: https://github.com/LukaszCieloch/automated-event-validation
+at https://github.com/LukaszCieloch/automated-event-validation
 
 ## Getting started
 
 This "getting started" guide only shows how to set up the components in Tealium. To actually benefit from these
-componentes, you of course need to define the actual Data Layer tests. For this, see the chapters after this one.
+components, you of course need to define the actual Data Layer tests. For this, see the chapters after this one.
 
 ### Tealium iQ (Mocha & Chai JS)
 
 You need
 
 1. A Tag which loads the mocha / chai JS libraries
-2. An "After Tags" Extension to run the actual data layer tests
+2. 2 Pre-Loader Extensions:
+   a) one to define the tests (unless you load them as a JS file into Tealium e.g. via Google Cloud Storage or another
+   CDN)
+   b) one to run the tests
+3. Depending on your setup, you also need an "All Tags" Extension that defines the `event_name`. The Event Name is the
+   identifier that defines which
+   tests are run
 
-#### Tag
+#### Mocha Chai JS Tag
 
-The Tag simply loads the Mocha and Chai JS libraries asynchronously, makes sure they are not loaded multiple times on
+The Tag simply loads the Mocha and Chai JS libraries asynchronously and makes sure they are not loaded multiple times on
 the same page. After successful loading, it triggers the Data Layer Tests in the Extension (see next chapter).
 
 1. Create a new tag of type "Tealium Custom Container" and call it e.g. "MochaChai Data Layer Tests".
-2. Make sure it does not fire on PROD environments and add any load rules that you want it to fire (e.g. "Any Event
-   apart from some Events we do not want to run tests for (yet)").
-3. Save your Tealium Profile (otherwise you cannot edit the tag template).
-4. Go into the tag -> Advanced -> Tag Template.
-5. Paste the code from `tealium-iq/tags/mochachai.js`
+2. Uncheck the "PROD" environment so the tag never fires on production (unless you want that)
+3. Go into the tag -> Advanced -> Tag Template.
+4. Paste the code from `tealium-iq/tags/mochachai.js` and click "Apply"
+5. Add any Load Rules to further restrict the test execution further (e.g. only if a certain "testing cookie" is active)
 6. Save the tag.
-7. Move the tag to the end of the execution order so it is ideally the last one to fire.
+7. Move the tag to the **end of the execution order** so it is the last one to fire.
 
-#### Extension
+#### Extensions
 
-1. Create an "After Tags" Extension of type "Advanced JavaScript".
+a) Mocha Chai JS Tests Definition and Helper Functions
+
+1. Create a "Pre-Loader" Extension of type "Advanced JavaScript" and name it "MochaChai Data Layer Test Map & Helpers"
+2. Add the code from `tealium-iq/extensions/eventMapAndHelpers.js`.
+3. Approve the Extension to all environments where you want it to run (you should not run it on PROD).
+
+b) Mocha Chai JS Tests Runner
+
+1. Create another "Pre-Loader" Extension of type "Advanced JavaScript".
 2. Add the code from `tealium-iq/extensions/mochachai-iq-extension.js`.
 3. Approve the Extension to all environments where you want it to run (you should not run it on PROD).
-4. The Extension should ideally be the last one in your execution order.
-5. Publish your Tealium Profile.
+4. Make sure that this Extension comes AFTER the "MochaChai Data Layer Test Map & Helpers" created under a)
+
+c) All Tags Extension (optional) to define the `event_name`
+
+1. If you do not have an `event_name` variable in your data layer already, you need to define this variable for all Data
+   Layer Events that Tealium processes. See notes further down on how to create a good event name.
+2. Create an "All Tags" Extension of type "Advanced JavaScript".
+3. Add the code from `tealium-iq/extensions/example-define-event-name.js` and adjust the code so it makes sense for your
+   setup.
+
+Now publish your Tealium Profile. You should be seeing the MochaChai JS tests running now.
+![img_2.png](img_2.png)
 
 #### Log to the console instead of the browser window (optional)
 
@@ -84,7 +113,7 @@ document.cookie = "mocha2console=123";
 ```
 
 To change the criteria for logging to the console, change `document.cookie.indexOf("mocha2console") !== -1` in
-the `tealium-iq/tags/mochachai.js` file to anything that makes sense in your case.
+the tag template (`tealium-iq/tags/mochachai.js`) to anything that makes sense for your case.
 
 #### Run scenarios automatically
 
@@ -95,11 +124,19 @@ https://www.youtube.com/watch?v=TLJCfYltMEc
 
 ### Tealium Functions (server-side testing)
 
-1. Create an Event Feed under Event Stream. The Event Feed should include all Events you want to run tests against (e.g.
-   all Events from production environments and website X or Y)
-2. Create a Tealium Function of the type "(After) Processed Event".
-3. Paste and review the code from `tealium-functions/unit_test.js`.
-4. Save and Publish your Customer Data Hub Profile.
+This guide assumes you have a running connection already between your Tealium iQ profile and your Tealium Customer Data
+Hub (CDH) profile ([see this guide
+otherwise](https://community.tealiumiq.com/t5/Customer-Data-Hub/Data-Sources-for-iQ-Tag-Management/ta-p/17934)).
+
+1. Go to Tealium CDH.
+2. Create an Event Feed under Event Stream -> Live Events. The Event Feed should include all Events you want to run
+   tests against (e.g.
+   all Events from production environments and website X or Y).
+    - If you have a lot of traffic, you might want to sample the traffic by setting a cookie to a random number between
+      1 and 100 in Tealium iQ and including only those with a number higher than e.g. 80 in the stream.
+3. Go to "Functions" -> Create a Tealium Function of the type "(After) Processed Event".
+4. Paste the code from `tealium-functions/unit_test.js`.
+5. Save and Publish your CDH Profile.
 
 ### Gulp Build Functionality
 
@@ -121,7 +158,8 @@ __Examples:__
 * `link__srchFilter__select`
 * `view__ecommerce__purchase`
 
-The script will look if there is a test defined for the given Event Name in the testing map (`TMSHelper.event2DLVarMap`)
+The Data Layer Test code will look if there is a test defined for the given Event Name in the testing
+map (`TMSHelper.event2DLVarMap`)
 . If so, it imports the test schema and execute the test.
 
 #### The `allEvents` and `allProdEvents` Tests
@@ -346,46 +384,51 @@ At the end of the Test Script, the `error` object and some context messages are 
 contains errors. Filter the logs for "Exceptions" to see all failed tests.
 ![img.png](img.png)
 
-## Gulp Workflows
+## Gulp Workflows to automatically build the Test Maps after changes
 
 Gulp Workflows are used to automatically put all the pieces together without tedious copy-paste effort.
-Run `npm install` to install the necessary libraries and dependencies from package.json.
+Run `npm install` once to install the necessary libraries and dependencies from package.json.
 
 ### Full Build
+After changing a test definition or a helper function, simply run `gulp build` from your terminal. 
+After that, you only need to 
+a) copy the updated `tealium-iq/extensions/eventMapAndHelpers.js` to the corresponding Extension in Tealium iQ.
+b) update your Tealium Function with updated `tealium-functions/unit_tests.js` file.  
 
-Run `gulp build` to
+### More Details
+If you want to find out more about the Gulp Workflows, read on.
 
-* generate concatenated Event Map JS Object and JSON files as well as minified versions of them
-* insert the updated Event Map into the Tealium Function (`functions/unit_test.js`)
-* update the helper functions in both the Mocha Extension and the Tealium Function
+`gulp build` actually does the following things:
+
+1. update the shared helper functions (including the functions used for "Function Matches" tests) used by both Mocha and
+  Tealium Functions
+2. generate a concatenated Event Map JS Object by concatenating all .json files (all test schemas) in `shared/globals` 
+3. Inserts both the as well as minified versions of them and inserts them also into `extensions/eventMapAndHelpers.js` Extension
+4. Insert the updated Event Map into the Tealium Function (`functions/unit_test.js`)
 
 The following explains each of the `build` actions:
 
-### Generate concatenated Event Map File
-
-Concatenates all JSON test schemas into one file (`shared/templates/eventMap.js` and `...json`).
-
-After changing any test definition, you can run this task individually via `gulp generateEventMap`.
-
-### Insert updated Event Map into Tealium Function (unit_test.js)
-
-`gulp updateTFMap`
-This updates the Tealium Function (unit_test.js) with `eventMap.min.js`.
-
-### Update shared Helper Functions
+#### 1. Update shared Helper Functions
 
 The client-side Mocha tests share most Helper functions with the server-side Tealium functions. To avoid duplicate
 maintenance effort, the shared functions are located in `shared/templates/helpers.js`. Only edit them there.
 
-After updates to the helper functions, this task re-inserts them (in minified form) into the MochaChai Extension and the
-Tealium Function (unit_test.js). You can trigger it via
+After updates to the helper functions, this task also re-inserts them (in minified form) into the Tealium Function (
+unit_test.js). 
 
-`gulp updateHelpers`
+You can trigger the task individually via `gulp updateHelpers`.
 
-### Don't forget to update Tealium itself
+#### 2 and 3. Generate concatenated Event Map & Helpers Files
 
-After running any of the tasks above, make sure to update the actual Tealium Function Code in the Tealium Customer Data
-Hub and the Tealium iQ MochaChai Extension with the updated code.
+Concatenates all JSON test schemas and Helper Functions into one file (`shared/templates/eventMap.js`
+and `eventMapAndHelpers.js` plus minified versions).
+The `eventMapAndHelpers.min.js` is also copied to `tealium-iq/extensions/eventMapAndHelpers.js`. After that, you can
+simply copy the code from there to the "Event Map & Helpers" Extension in Tealium.
+
+#### 4. Insert updated Event Map into Tealium Function (unit_test.js)
+
+Updates the Tealium Function (unit_test.js) with `eventMap.min.js`.
+`gulp updateTFMap`
 
 ## Support / Questions
 
