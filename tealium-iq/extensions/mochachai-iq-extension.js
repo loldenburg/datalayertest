@@ -7,7 +7,6 @@ window.TMSHelper = window.TMSHelper || {};
  * @module tests/mochaChaiExt
  */
 TMSHelper.mochaChaiExt = true;
-
 /**
  * event2DLVarMap: test definitions per event name/data layer variable.
  * The code as-is expects you to have an object TMSHelper.event2DLVarMap defined prior to this extension
@@ -37,7 +36,7 @@ TMSHelper.event2DLVarMap = TMSHelper.event2DLVarMap || null; // INSERT YOUR Data
 if (TMSHelper.event2DLVarMap === null) {
     console.error("TMSHelper.event2DLVarMap (Map with Test definitions) is not defined! Please define it before this extension!");
 }
-
+const short = TMSHelper.shortPreview;
 // Mocha-specific Helper functions
 /**
  * populatedAndOfType: checks if a data layer property is populated and of type (according to utag.ut.typeOf logic: "regexp, string, object, number, boolean").
