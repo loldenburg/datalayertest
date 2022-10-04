@@ -40,14 +40,14 @@ window.TMSHelper = window.TMSHelper || {}; TMSHelper.event2DLVarMap = {
 }
 ,"allEventsTypeSchema": {
     "populatedAndOfType": {
-        "toolGA_tid": "string",
+        "toolGA_propertyId": "string",
         "toolAA_rsId": "string",
         "server_code": "string",
         "platform": "string",
         "page_type": "string",
         "page_title": "string",
         "page_language": "string",
-        "page_instanceid": "string",
+        "page_instanceId": "string",
         "order_currency": "string",
         "environment_platform": "string",
         "debug_info": "string",

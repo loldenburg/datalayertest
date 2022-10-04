@@ -9,6 +9,6 @@ try {
 } catch (e) {
 }
 // if compcat does not exist, use On-Site Search Type OR Page Type OR Pathname
-compCat = compCat || b["oss_type"] || b["page_type"] || location.pathname;
-compSub = compSub || b["oss_interaction"] || "na";
-b["event_name"] = [b["ut.event"], compCat, compSub].join("__");
+compCat = compCat || b["page_type"] || location.pathname;
+compSub = compSub || "na";
+b["event_name"] = [b["ut.event"], compCat, compSub].join("__"); // will generate Event Names like "link__ecommerce__add_cart" , "view__HOME__na"

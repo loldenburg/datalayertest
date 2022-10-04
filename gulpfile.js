@@ -23,7 +23,7 @@ function getGlobals() {
 
 /**
  * generates the event map with all event names concatenated into one large object and stores them in
- * templates/eventMap.js, eventMap.json and minified versions of those
+ * templates/eventMap.js and minified versions of those plus in the tealium-iq/extensions folder.
  */
 function generateEventMap(cb) {
     let globals = getGlobals();
@@ -34,7 +34,7 @@ function generateEventMap(cb) {
         let g = globals[i];
         let gContent = fs.readFileSync("shared/globals/" + g + ".json", "utf8");
         let gOutput = '"' + g + '": ' + gContent + ",";
-        console.log(gOutput);
+        console.log(gOutput.slice(0,250));
         output += gOutput;
         output_json_only += gOutput;
     }
@@ -45,23 +45,36 @@ function generateEventMap(cb) {
     output_json_only += "}";
     // write the output into the templates folder
     fs.writeFileSync("shared/templates/eventMap.js", output);
-    fs.writeFileSync("shared/templates/eventMap.json", output_json_only);
-    // fs.writeFileSync("../extensions/8998.js", output); // copy file to the extension folder (8998.js)
+    // fs.writeFileSync("shared/templates/eventMap.json", output_json_only);
+    // add the helper functions to the js file
+    output += fs.readFileSync("shared/templates/helpers.min.js", "utf8");
+    // now write to the "Map plus helpers" file
+    fs.writeFileSync("shared/templates/eventMapAndHelpers.js", output);
     // create a minified version of the file in the templates folder
     // the stream makes sure we don't start with the next command until all the file operations have been completed.
-    let jsStream = src("shared/templates/eventMap.js")
-        .pipe(rename("eventMap.min.js"))
+    let jsStream = src("shared/templates/{eventMap.js,eventMapAndHelpers.js}")
+        .pipe(rename(function (path) {
+            return {
+                dirname: path.dirname,
+                basename: path.basename,
+                extname: ".min.js"
+            };
+        }))
         .pipe(uglify())
         .pipe(dest("shared/templates/"));
 
     jsStream.on('finish', function () {
-        let jsonStream = src("shared/templates/eventMap.json")
-            .pipe(rename("eventMap.min.json"))
-            .pipe(jsonminify())
-            .pipe(dest("shared/templates/"));
-        jsonStream.on('finish', cb);
+        let extensionStream = src("shared/templates/eventMapAndHelpers.min.js")
+            // copy the eventMapAndHelpers JS to the tealium-iq extensions folder
+            //let mapAndHelpersMinified = fs.readFileSync("shared/templates/eventMapAndHelpers.min.js", "utf8");
+            //fs.writeFileSync("../tealium-iq/extensions/eventMapAndHelpers.js", mapAndHelpersMinified);
+            // also generate a minified JSON file in case we want to download
+            .pipe(rename("eventMapAndHelpers.js"))
+            .pipe(dest("tealium-iq/extensions/"));
+        extensionStream.on('finish', cb);
     });
 }
+
 /**
  * Updates the Tealium Functions unit_test.js file with the newest version of the Event Testing Map.
  * Can be removed if Tealium Functions loads the map from a server (see `downloadTestDefinitions` flag in Tealium Function)
@@ -78,24 +91,24 @@ function updateTealiumFunctionsMap(cb) {
 }
 
 function updateHelpers(cb) {
-    console.log("Updating Shared Helper Functions in Mocha and Tealium Functions from Template");
+    console.log("Updating Shared Helper Functions in Tealium Functions from Template");
     let minifyStream = src("shared/templates/helpers.js")
         .pipe(rename("helpers.min.js"))
         .pipe(uglify())
         .pipe(dest("shared/templates/"));
     minifyStream.on('finish', function () {
         const helpersPath = "shared/templates/helpers.min.js";
-        const mochaPath = "tealium-iq/extensions/mochachai-iq-extension.js";
+        // const mochaPath = "tealium-iq/extensions/mochachai-iq-extension.js";
         const tealFuncPath = "tealium-functions/unit_test.js";
         let helpers = fs.readFileSync(helpersPath, "utf8");
-        let mocha = fs.readFileSync(mochaPath, "utf8");
+        // let mocha = fs.readFileSync(mochaPath, "utf8");
         let tealFunction = fs.readFileSync(tealFuncPath, "utf8");
         const replaceRe = /\/\/ Shared TMSHelper functions start[\s\S]+\/\/ Shared TMSHelper functions end/gmi;
         const replaceBy = "// Shared TMSHelper functions start\n" + helpers + "\n// Shared TMSHelper functions end";
         tealFunction = tealFunction.replace(replaceRe, replaceBy);
-        mocha = mocha.replace(replaceRe, replaceBy);
+        // mocha = mocha.replace(replaceRe, replaceBy);
         fs.writeFileSync(tealFuncPath, tealFunction);
-        fs.writeFileSync(mochaPath, mocha);
+        // fs.writeFileSync(mochaPath, mocha);
         console.log("Finished updating Helpers");
         cb();
     });
@@ -105,4 +118,4 @@ exports.generateEventMap = generateEventMap;
 exports.updateTFMap = updateTealiumFunctionsMap;
 exports.updateHelpers = updateHelpers;
 // generates the Event Map files, then updates Event Map in unit_test.js, then updates helpers in unit_test.js and mocha
-exports.build = series(generateEventMap, updateTealiumFunctionsMap, updateHelpers);
+exports.build = series(updateHelpers, generateEventMap, updateTealiumFunctionsMap);
