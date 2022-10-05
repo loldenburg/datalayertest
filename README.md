@@ -45,10 +45,11 @@ Data Studio (via BigQuery)
 The Tealium Functions part of this framework is a much-enhanced and partially rewritten fork of Łukasz Cieloch's draft
 at https://github.com/LukaszCieloch/automated-event-validation
 
-## Getting started
+## Getting started - Step by Step Guide
 
 This "getting started" guide only shows how to set up the components in Tealium. To actually benefit from these
 components, you of course need to define the actual Data Layer tests. For this, see the chapters after this one.
+Most of the steps are also shown in this video: https://drive.google.com/open?id=1yf3KfnderZeAtrypkVteJzYWkTWgJnlh
 
 ### Tealium iQ (Mocha & Chai JS)
 
